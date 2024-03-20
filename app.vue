@@ -3,9 +3,20 @@ import { defineAsyncComponent } from 'vue'
 const CSSRuntimeProvider = defineAsyncComponent(async () => (await import('@master/css.vue')).CSSRuntimeProvider)
 </script>
 <template>
-  <CSSRuntimeProvider :config="import('./master.css')">
+  <!-- <CSSRuntimeProvider :config="import('./master.css')">
     <div class="light">
-      <NuxtPage />
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
     </div>
-  </CSSRuntimeProvider>
+  </CSSRuntimeProvider> -->
+
+  <NuxtLayout>
+    <CSSRuntimeProvider :config="import('./master.css')">
+      <div class="light">
+        <NuxtPage />
+      </div>
+    </CSSRuntimeProvider>
+  </NuxtLayout>
+
 </template>

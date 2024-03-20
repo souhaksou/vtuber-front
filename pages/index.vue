@@ -1,5 +1,7 @@
+<script setup>
+</script>
 <template>
   <div>
-    index
+    <p class="fg:blue">index</p>
   </div>
 </template>
