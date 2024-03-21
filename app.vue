@@ -13,9 +13,7 @@ const CSSRuntimeProvider = defineAsyncComponent(async () => (await import('@mast
 
   <NuxtLayout>
     <CSSRuntimeProvider :config="import('./master.css')">
-      <div class="light">
-        <NuxtPage />
-      </div>
+      <NuxtPage />
     </CSSRuntimeProvider>
   </NuxtLayout>
 

@@ -2,9 +2,10 @@
 export default defineNuxtConfig({
   // devtools: { enabled: true },
   modules: [
-    '@master/css.nuxt'
+    '@master/css.nuxt',
 ],
 css: [
-  '@/assets/main.css'
+  '@/assets/css/main.css',
+  "bootstrap-icons/font/bootstrap-icons.css"
 ]
 })

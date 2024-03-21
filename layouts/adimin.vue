@@ -2,13 +2,16 @@
 import admin from '@/components/navbarAdmin.vue';
 </script>
 <template>
-    <header>
-        <admin />
-    </header>
-    <section>
-        <slot />
-    </section>
-    <footer>
-        <p>footer</p>
-    </footer>
+    <div class="light">
+        <header>
+            <admin />
+        </header>
+        <section>
+            <slot />
+        </section>
+        <footer>
+            <p>footer</p>
+        </footer>
+    </div>
+
 </template>
