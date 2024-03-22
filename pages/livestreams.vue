@@ -1,5 +1,5 @@
 <template>
   <div>
-    page2
+    直播
   </div>
 </template>

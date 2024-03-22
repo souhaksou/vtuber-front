@@ -4,6 +4,7 @@
 
 body {
     font-family: 'Noto Sans TC', Roboto, '微軟正黑體', sans-serif;
+    line-height: 1.5;
 }
 
 img {
@@ -11,6 +12,9 @@ img {
     height: auto;
 }
 
+table {
+    border-collapse: collapse;
+}
 
 /* .modal-container {
     padding: 16px !important;

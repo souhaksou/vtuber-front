@@ -1,5 +1,5 @@
 <template>
   <div>
-    page1
+    排行
   </div>
 </template>

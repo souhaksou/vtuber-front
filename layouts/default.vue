@@ -1,14 +1,14 @@
 <script setup>
-import navbar from '@/components/navbar.vue';
+import navbar from '@/components/navbar/navbar.vue';
 </script>
 <template>
-    <div class="light">
+    <div class="light bg:white w:full max-w:screen-3xl mx:auto overflow-x:hidden">
         <header>
             <navbar />
         </header>
-        <section>
+        <main>
             <slot />
-        </section>
+        </main>
         <footer>
             <p>footer</p>
         </footer>
