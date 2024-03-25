@@ -16,7 +16,7 @@ table {
     border-collapse: collapse;
 }
 
-/* .modal-container {
+.modal-container {
     padding: 16px !important;
     background-color: rgba(0, 0, 0, 0.5) !important;
     cursor: default !important;
@@ -32,4 +32,4 @@ table {
     .modal-container {
         padding: 32px !important;
     }
-} */
+}

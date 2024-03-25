@@ -5,6 +5,6 @@ definePageMeta({
 </script>
 <template>
     <section class="p:32">
-        index
+        admin
     </section>
 </template>

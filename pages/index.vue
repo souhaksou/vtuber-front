@@ -39,28 +39,66 @@ const { getImgUrl } = useAssets();
       </div>
     </div>
     <!-- 排行 -->
-    <div class="max-w:screen-lg mx:auto ">
+    <div class="max-w:screen-lg mx:auto mb:64">
       <p class="fg:primary f:32 f:bold t:center mb:32">熱門排行</p>
-      <div class="mx:auto max-w:screen-2xs overflow-x:auto">
-        <table class="w:full white-space:nowrap t:center {p:8|16;}>tr>td">
-          <tr class="f:bold f:18 {bb:1|solid|gray;}>td">
-            <td></td>
-            <td>名稱</td>
-            <td>熱度</td>
-          </tr>
-          <tr v-for="i in 3" :key="i">
-            <td>{{ i }}</td>
-            <td>
-              <div class="flex ai:center">
-                <div class="m:4|16">
-                  <img :src="getImgUrl(`vtuber${i}.jpg`)" alt="article" class="w:48 r:50%">
+      <div class="grid-cols:2 gap:32">
+        <div class="overflow-x:auto">
+          <p class="f:20 f:bold mb:16 t:center">排行榜1</p>
+          <table class="w:full white-space:nowrap t:center {p:8|16;}>tr>td">
+            <tr class="f:bold f:18 {by:1|solid|gray;bg:gray-10;}>td">
+              <td></td>
+              <td>名稱</td>
+              <td>熱度</td>
+            </tr>
+            <tr v-for="i in 3" :key="i" :class="`${i % 2 === 1 ? 'bg:secondary' : ''}`">
+              <td>{{ i }}</td>
+              <td>
+                <div class="flex ai:center">
+                  <div class="m:4|16">
+                    <img :src="getImgUrl(`vtuber${i}.jpg`)" alt="article" class="w:48 r:50%">
+                  </div>
+                  <p> {{ `名稱${i}` }}</p>
                 </div>
-                <p> {{ `名稱${i}` }}</p>
-              </div>
-            </td>
-            <td>{{ (4 - i) * 100000 }}</td>
-          </tr>
-        </table>
+              </td>
+              <td>{{ (4 - i) * 100000 }}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="overflow-x:auto">
+          <p class="f:20 f:bold mb:16 t:center">排行榜2</p>
+          <table class="w:full white-space:nowrap t:center {p:8|16;}>tr>td">
+            <tr class="f:bold f:18 {by:1|solid|gray;bg:gray-10;}>td">
+              <td></td>
+              <td>名稱</td>
+              <td>熱度</td>
+            </tr>
+            <tr v-for="i in 3" :key="i" :class="`${i % 2 === 0 ? 'bg:secondary' : ''}`">
+              <td>{{ i }}</td>
+              <td>
+                <div class="flex ai:center">
+                  <div class="m:4|16">
+                    <img :src="getImgUrl(`vtuber${i}.jpg`)" alt="article" class="w:48 r:50%">
+                  </div>
+                  <p> {{ `名稱${i}` }}</p>
+                </div>
+              </td>
+              <td>{{ (4 - i) * 100000 }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- 直播跟圖表 -->
+    <div class="max-w:screen-lg mx:auto">
+      <div class="grid-cols:2 gap:32">
+        <div>
+          <p class="fg:primary f:32 f:bold t:center mb:32">直播</p>
+          <div>直播</div>
+        </div>
+        <div>
+          <p class="fg:primary f:32 f:bold t:center mb:32">圖表</p>
+          <div>圖表</div>
+        </div>
       </div>
     </div>
   </section>
