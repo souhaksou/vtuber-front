@@ -5,6 +5,7 @@ definePageMeta({
 
 import { openModal } from "jenesius-vue-modal";
 import errorMessage from '@/components/modal/errorMessage.vue';
+import VueClientRecaptcha from 'vue-client-recaptcha';
 
 const data = ref({
     account: '',
@@ -12,16 +13,22 @@ const data = ref({
 });
 const showPassword = ref(false);
 
+const captchaInput = ref('');
+const captchaCheck = ref(null);
+const getCaptchaCode = (value) => {
+    captchaCheck.value = value;
+};
+
 const submit = async () => {
-    if (data.value.account.length === 0) {
-        await openModal(errorMessage, { msg: '請輸入帳號' });
-        return;
-    }
-    if (data.value.password.length === 0) {
-        await openModal(errorMessage, { msg: '請輸入密碼' });
-        return;
-    }
-    // openModal(errorMessage, { msg: 'error' });
+    // if (data.value.account.length === 0) {
+    //     await openModal(errorMessage, { msg: '請輸入帳號' });
+    //     return;
+    // }
+    // if (data.value.password.length === 0) {
+    //     await openModal(errorMessage, { msg: '請輸入密碼' });
+    //     return;
+    // }
+    console.log(captchaInput.value, captchaCheck.value);
 };
 
 </script>
@@ -39,8 +46,23 @@ const submit = async () => {
                     <i class="bi" :class="`${showPassword === false ? 'bi-eye-slash-fill' : 'bi-eye-fill'}`"></i>
                 </a>
             </div>
+            <p class="f:20 mb:16">驗證碼</p>
+            <div class="mb:32 flex jc:space-between ai:center">
+                <div class="w:full max-w:45%">
+                    <input type="text" class="block w:full f:20 p:8|16 r:4 b:1|solid|gray" v-model="captchaInput">
+                </div>
+                <div class="w:16"></div>
+                <div class="w:50%">
+                    <VueClientRecaptcha @getCode="getCaptchaCode" :count="4" chars="1234567890" :hideLines="true"
+                        custom-text-color="black" class="flex jc:end ai:center">
+                        <template #icon>
+                            <a class="f:24"><i class="bi bi-arrow-clockwise"></i></a>
+                        </template>
+                    </VueClientRecaptcha>
+                </div>
+            </div>
             <a @click="submit"
-                class="block w:full t:center p:8|16 r:4 fg:white bg:primary b:1|solid|primary transition:400ms {fg:primary;bg:transparent;}:hover">送出</a>
+                class="block w:full t:center p:8|16 r:4 f:20 fg:white bg:primary b:1|solid|primary transition:400ms {fg:primary;bg:transparent;}:hover">送出</a>
         </div>
     </section>
 </template>
