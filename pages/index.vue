@@ -18,7 +18,9 @@ const { getImgUrl } = useAssets();
   <section class="p:32">
     <!-- 文章 -->
     <div class="max-w:screen-lg mx:auto mb:64">
-      <p class="fg:primary f:32 f:bold t:center mb:32">精選文章</p>
+      <p class="fg:primary f:32 f:bold t:center mb:32">
+        <NuxtLink to="/articles/featured" class="inline-block">精選文章</NuxtLink>
+      </p>
       <div class="grid-cols:2 gap:32">
         <div v-for="i in 6" :key="i" class="bg:secondary r:4">
           <img :src="getImgUrl(`article${i}.jpg`)" alt="article" class="r:4">
@@ -40,7 +42,9 @@ const { getImgUrl } = useAssets();
     </div>
     <!-- 排行 -->
     <div class="max-w:screen-lg mx:auto mb:64">
-      <p class="fg:primary f:32 f:bold t:center mb:32">熱門排行</p>
+      <p class="fg:primary f:32 f:bold t:center mb:32">
+        <NuxtLink to="/rankings" class="inline-block">熱門排行</NuxtLink>
+      </p>
       <div class="grid-cols:2 gap:32">
         <div class="overflow-x:auto">
           <p class="f:20 f:bold mb:16 t:center">排行榜1</p>
@@ -92,11 +96,15 @@ const { getImgUrl } = useAssets();
     <div class="max-w:screen-lg mx:auto">
       <div class="grid-cols:2 gap:32">
         <div>
-          <p class="fg:primary f:32 f:bold t:center mb:32">直播</p>
+          <p class="fg:primary f:32 f:bold t:center mb:32">
+            <NuxtLink to="/livestreams" class="inline-block">直播</NuxtLink>
+          </p>
           <div>直播</div>
         </div>
         <div>
-          <p class="fg:primary f:32 f:bold t:center mb:32">圖表</p>
+          <p class="fg:primary f:32 f:bold t:center mb:32">
+            <NuxtLink to="/charts" class="inline-block">圖表</NuxtLink>
+          </p>
           <div>圖表</div>
         </div>
       </div>
