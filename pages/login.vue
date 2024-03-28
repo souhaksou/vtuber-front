@@ -4,7 +4,7 @@ definePageMeta({
 });
 
 import { openModal } from "jenesius-vue-modal";
-import errorMessage from '@/components/modal/errorMessage.vue';
+import errorMsg from '@/components/modal/errorMsg.vue';
 import VueClientRecaptcha from 'vue-client-recaptcha';
 
 const data = ref({
@@ -20,15 +20,22 @@ const getCaptchaCode = (value) => {
 };
 
 const submit = async () => {
-    // if (data.value.account.length === 0) {
-    //     await openModal(errorMessage, { msg: '請輸入帳號' });
-    //     return;
-    // }
-    // if (data.value.password.length === 0) {
-    //     await openModal(errorMessage, { msg: '請輸入密碼' });
-    //     return;
-    // }
-    console.log(captchaInput.value, captchaCheck.value);
+    if (data.value.account.length === 0) {
+        await openModal(errorMsg, { msg: '請輸入帳號' });
+        return;
+    }
+    if (data.value.password.length === 0) {
+        await openModal(errorMsg, { msg: '請輸入密碼' });
+        return;
+    }
+    if (captchaInput.value.length === 0) {
+        await openModal(errorMsg, { msg: '請輸入驗證碼' });
+        return;
+    }
+    if (captchaInput.value !== captchaCheck.value) {
+        await openModal(errorMsg, { msg: '驗證碼錯誤' });
+        return;
+    }
 };
 
 </script>

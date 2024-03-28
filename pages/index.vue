@@ -21,24 +21,25 @@ const { getImgUrl } = useAssets();
       <p class="fg:primary f:32 f:bold t:center mb:32">
         <NuxtLink to="/articles/featured" class="inline-block">精選文章</NuxtLink>
       </p>
-      <div class="grid-cols:2 gap:32">
+      <div class="grid-cols:2 gap:32 mb:64">
         <div v-for="i in 6" :key="i" class="bg:secondary r:4">
           <img :src="getImgUrl(`article${i}.jpg`)" alt="article" class="r:4">
           <div class="p:32|16">
             <p class="f:20 mb:16">{{ `標題${i}` }}</p>
-            <p class="text-ellipsis fg:gray mb:16">
+            <p class="text-ellipsis fg:gray">
               布辛寺別房珠汗人草拉乙追次到幾，幾土重羊半南雪象助穴朱內，里老園教白果什習今害尺泉起陽習借會申哥。
               隻唱步戶問裝同怕東卜苗金寸經福因抱。間笑祖千怪用乞豆：童地現耍消見快坐：方的飯青車大師頁唱。
               布辛寺別房珠汗人草拉乙追次到幾，幾土重羊半南雪象助穴朱內，里老園教白果什習今害尺泉起陽習借會申哥。
               隻唱步戶問裝同怕東卜苗金寸經福因抱。間笑祖千怪用乞豆：童地現耍消見快坐：方的飯青車大師頁唱。
             </p>
-            <div class="flex jc:end">
-              <a
-                class="inline-block p:4|16 r:4 fg:white bg:primary b:1|solid|primary transition:400ms {fg:primary;bg:transparent;}:hover">查看更多</a>
-            </div>
           </div>
         </div>
       </div>
+      <p class="t:center">
+        <NuxtLink to="/articles"
+          class="inline-block p:8|32 r:4 f:20 fg:white bg:primary b:1|solid|primary transition:400ms {fg:primary;bg:transparent;}:hover">
+          查看所有文章</NuxtLink>
+      </p>
     </div>
     <!-- 排行 -->
     <div class="max-w:screen-lg mx:auto mb:64">
