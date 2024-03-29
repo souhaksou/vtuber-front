@@ -6,6 +6,7 @@ export default {
   variables: {
     primary: "#E26488",
     secondary: "#FDF5F9",
+    link: "#FA8072",
   },
   semantics: {},
   mediaQueries: {},

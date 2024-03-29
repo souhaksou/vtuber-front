@@ -2,6 +2,14 @@
 export default defineNuxtConfig({
   devtools: { enabled: false },
   ssr: false,
-  modules: ["@master/css.nuxt"],
+  modules: [
+    "@master/css.nuxt",
+    [
+      "nuxt-lazy-load",
+      {
+        directiveOnly: true,
+      },
+    ],
+  ],
   css: ["@/assets/css/main.css", "bootstrap-icons/font/bootstrap-icons.css"],
 });
