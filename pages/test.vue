@@ -3,11 +3,34 @@ definePageMeta({
     layout: 'login'
 });
 
-import pag from '@/components/nav/pagination.vue';
+const getData = async () => {
+    try {
+        const response = await $fetch('https://randomuser.me/api/', {
+            method: 'GET',
+        });
+        console.log('success', response);
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+
+const data = ref(1);
+const result = await useFetch('https://randomuser.me/api/');
+console.log(result);
+// data.value = result.data.value;
+// onMounted(() => {
+//     console.log(data.value);
+// }),
+
 </script>
+
 <template>
-    <div>
-        test
-    </div>
-    <pag />
+    <section class="w:full h:100vh flex flex:col jc:center ai:center">
+        <p>test</p>
+        <p>{{ result.data }}</p>
+        <div>
+            <button @click="getData">click</button>
+        </div>
+    </section>
 </template>

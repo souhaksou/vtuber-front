@@ -64,7 +64,7 @@ const searchOption = ref('');
           </div>
           <img class="max-w:200"
             src="https://i0.wp.com/r-lover.com/wp-content/uploads/2024/02/IMG_20240224_131827.jpg?resize=240%2C180&ssl=1"
-            alt="img" v-lazy-load>
+            alt="img">
         </div>
       </div>
       <!-- pagination -->
