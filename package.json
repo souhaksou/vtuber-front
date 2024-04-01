@@ -16,6 +16,7 @@
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
     "bootstrap-icons": "^1.11.3",
+    "dayjs": "^1.11.10",
     "jenesius-vue-modal": "^1.11.1",
     "nuxt": "^3.11.1",
     "vue": "^3.4.21",
