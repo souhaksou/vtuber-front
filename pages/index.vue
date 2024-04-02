@@ -2,6 +2,17 @@
 import 'vue3-carousel/dist/carousel.css';
 import { Carousel, Slide } from 'vue3-carousel';
 const { getImgUrl } = useAssets();
+const { toLocal, live3 } = useTime();
+const { deepCopy } = useCopy();
+
+const livestreamsUrl = 'https://cdn.statically.io/gh/TaiwanVtuberData/TaiwanVTuberTrackingDataJson/d2cd82b68091beb84ea4ef8bb276475accb84dd8/api/v2/all/livestreams/all.json';
+const livestreams = ref([]);
+const livestreamsResult = await useFetch(livestreamsUrl, { method: 'GET' });
+if (livestreamsResult.status.value === 'success') {
+  const arr = deepCopy(livestreamsResult.data.value.livestreams);
+  livestreams.value = live3(arr);
+}
+
 
 </script>
 <template>
@@ -98,11 +109,36 @@ const { getImgUrl } = useAssets();
       <!-- 直播跟圖表 -->
       <div class="mx:auto">
         <div class="grid-cols:2 gap:32">
-          <div>
+          <div class="overflow-x:auto">
             <p class="fg:primary f:36 f:bold t:center mb:32">
               <NuxtLink to="/livestreams" class="inline-block">直播</NuxtLink>
             </p>
-            <div>直播</div>
+            <div class="overflow-x:auto">
+              <h2 class="f:24 mb:16 t:center">實況中</h2>
+              <table class="w:full white-space:nowrap t:center {p:8|16;}>tr>td">
+                <tr class="f:bold f:18 {by:1|solid|gray;bg:gray-10;}>td">
+                  <td>名稱</td>
+                  <td>開始時間</td>
+                  <td>連結</td>
+                </tr>
+                <tr v-for="(item, index) in livestreams" :key="item.id"
+                  :class="`${(index + 1) % 2 === 1 ? 'bg:secondary' : ''}`">
+                  <td>
+                    <div class="flex ai:center">
+                      <div class="m:4|16">
+                        <img :src="item.imgUrl" alt="article" class="w:48 r:50%">
+                      </div>
+                      <p> {{ item.name }}</p>
+                    </div>
+                  </td>
+                  <td>{{ toLocal(item.startTime) }}</td>
+                  <td>
+                    <a :href="item.videoUrl" target="_blank" class="f:20 fg:primary inline-block px:8"><i
+                        class="bi bi-play-btn-fill"></i></a>
+                  </td>
+                </tr>
+              </table>
+            </div>
           </div>
           <div>
             <p class="fg:primary f:36 f:bold t:center mb:32">
