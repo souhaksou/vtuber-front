@@ -1,11 +1,14 @@
 <script setup>
 definePageMeta({
-    layout: 'login'
+    layout: 'nothing',
 });
 
 import { openModal } from "jenesius-vue-modal";
+import textMsg from '@/components/modal/textMsg.vue';
 import errorMsg from '@/components/modal/errorMsg.vue';
 import VueClientRecaptcha from 'vue-client-recaptcha';
+
+const router = useRouter();
 
 const data = ref({
     account: '',
@@ -19,26 +22,50 @@ const getCaptchaCode = (value) => {
     captchaCheck.value = value;
 };
 
+const { $axios } = useNuxtApp();
+const runtimeConfig = useRuntimeConfig();
+
 const submit = async () => {
     if (data.value.account.length === 0) {
-        await openModal(errorMsg, { msg: '請輸入帳號' });
+        await openModal(textMsg, { msg: '請輸入帳號' });
         return;
     }
     if (data.value.password.length === 0) {
-        await openModal(errorMsg, { msg: '請輸入密碼' });
+        await openModal(textMsg, { msg: '請輸入密碼' });
         return;
     }
     if (captchaInput.value.length === 0) {
-        await openModal(errorMsg, { msg: '請輸入驗證碼' });
+        await openModal(textMsg, { msg: '請輸入驗證碼' });
         return;
     }
     if (captchaInput.value !== captchaCheck.value) {
-        await openModal(errorMsg, { msg: '驗證碼錯誤' });
+        await openModal(textMsg, { msg: '驗證碼錯誤' });
         return;
+    }
+    try {
+        const res = await $axios({
+            method: 'post',
+            url: `${runtimeConfig.public.API_BASE_URL}/admin/login`,
+            data: data.value
+        });
+        if (res.data.success === true) {
+            const { token, expirationDate } = res.data;
+            console.log(token, expirationDate);
+            localStorage.setItem("token", token);
+            localStorage.setItem("expirationDate", expirationDate);
+            router.push('/admin');
+        }
+    } catch (error) {
+        console.error(error);
+        if (error.response.data.success === false) {
+            const message = error.response.data.message;
+            await openModal(errorMsg, { msg: message });
+        }
     }
 };
 
 </script>
+
 <template>
     <section class="h:100vh bg:secondary p:32 flex jc:center ai:center">
         <div class="w:full max-w:screen-3xs bg:white p:32 r:4">
@@ -62,9 +89,6 @@ const submit = async () => {
                 <div class="w:50%">
                     <VueClientRecaptcha @getCode="getCaptchaCode" :count="4" chars="1234567890" :hideLines="true"
                         custom-text-color="black" class="flex jc:end ai:center">
-                        <template #icon>
-                            <a class="f:24"><i class="bi bi-arrow-clockwise"></i></a>
-                        </template>
                     </VueClientRecaptcha>
                 </div>
             </div>

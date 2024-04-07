@@ -4,15 +4,31 @@ import { Carousel, Slide } from 'vue3-carousel';
 const { getImgUrl } = useAssets();
 const { toLocal, live3 } = useTime();
 const { deepCopy } = useCopy();
+const { popular } = useCheck();
 
-const livestreamsUrl = 'https://cdn.statically.io/gh/TaiwanVtuberData/TaiwanVTuberTrackingDataJson/d2cd82b68091beb84ea4ef8bb276475accb84dd8/api/v2/all/livestreams/all.json';
+const livestreamsUrl = 'https://raw.githubusercontent.com/TaiwanVtuberData/TaiwanVTuberTrackingDataJson/master/api/v2/TW/livestreams/all.json';
 const livestreams = ref([]);
 const livestreamsResult = await useFetch(livestreamsUrl, { method: 'GET' });
 if (livestreamsResult.status.value === 'success') {
-  const arr = deepCopy(livestreamsResult.data.value.livestreams);
+  const arr = deepCopy(JSON.parse(livestreamsResult.data.value).livestreams);
   livestreams.value = live3(arr);
 }
 
+const hotUrl = 'https://raw.githubusercontent.com/TaiwanVtuberData/TaiwanVTuberTrackingDataJson/master/api/v2/TW/trending-vtubers/livestream/10.json';
+const hot = ref([]);
+const hotResult = await useFetch(hotUrl, { method: 'GET' });
+if (hotResult.status.value === 'success') {
+  const arr = deepCopy(JSON.parse(hotResult.data.value).VTubers);
+  hot.value = arr;
+}
+
+const followUrl = 'https://raw.githubusercontent.com/TaiwanVtuberData/TaiwanVTuberTrackingDataJson/master/api/v2/TW/vtubers/10.json';
+const follow = ref([]);
+const followResult = await useFetch(followUrl, { method: 'GET' });
+if (followResult.status.value === 'success') {
+  const arr = deepCopy(JSON.parse(followResult.data.value).VTubers);
+  follow.value = arr;
+}
 
 </script>
 <template>
@@ -57,50 +73,54 @@ if (livestreamsResult.status.value === 'success') {
       <!-- 排行 -->
       <div class="mb:64">
         <p class="fg:primary f:36 f:bold t:center mb:32">
-          <NuxtLink to="/rankings" class="inline-block">熱門排行</NuxtLink>
+          <NuxtLink to="/rankings" class="inline-block">排行</NuxtLink>
         </p>
         <div class="grid-cols:2 gap:32">
           <div class="overflow-x:auto">
-            <h2 class="f:24 mb:16 t:center">排行榜1</h2>
-            <table class="w:full white-space:nowrap t:center {p:8|16;}>tr>td">
+            <h2 class="f:24 mb:16 t:center">熱門人氣</h2>
+            <table class="w:full white-space:nowrap t:center {p:8;}>tr>td">
               <tr class="f:bold f:18 {by:1|solid|gray;bg:gray-10;}>td">
-                <td></td>
                 <td>名稱</td>
-                <td>熱度</td>
+                <td>人氣</td>
+                <td>連結</td>
               </tr>
-              <tr v-for="i in 3" :key="i" :class="`${i % 2 === 1 ? 'bg:secondary' : ''}`">
-                <td>{{ i }}</td>
+              <tr v-for="(item, index) in hot" :key="item.id" :class="`${index % 2 === 1 ? 'bg:secondary' : ''}`">
                 <td>
-                  <div class="flex ai:center">
-                    <div class="m:4|16">
-                      <img :src="getImgUrl(`vtuber${i}.jpg`)" alt="article" class="w:48 r:50%">
-                    </div>
-                    <p> {{ `名稱${i}` }}</p>
+                  <div class="flex jc:start ai:center">
+                    <img :src="item.imgUrl" alt="article" class="mx:16 w:40 r:50%">
+                    <p>{{ item.name }}</p>
                   </div>
                 </td>
-                <td>{{ (4 - i) * 100000 }}</td>
+                <td>{{ (item.YouTube !== undefined ? item.YouTube.popularity : 0) + (item.Twitch !== undefined ?
+                  item.Twitch.popularity : 0) }}</td>
+                <td>
+                  <a :href="popular(item.popularVideo)" target="_blank" class="f:20 fg:primary inline-block px:8"><i
+                      class="bi bi-play-btn-fill"></i></a>
+                </td>
               </tr>
             </table>
           </div>
           <div class="overflow-x:auto">
-            <h2 class="f:24 mb:16 t:center">排行榜2</h2>
-            <table class="w:full white-space:nowrap t:center {p:8|16;}>tr>td">
+            <h2 class="f:24 mb:16 t:center">訂閱追蹤</h2>
+            <table class="w:full white-space:nowrap t:center {p:8;}>tr>td">
               <tr class="f:bold f:18 {by:1|solid|gray;bg:gray-10;}>td">
-                <td></td>
                 <td>名稱</td>
-                <td>熱度</td>
+                <td>人數</td>
+                <td>連結</td>
               </tr>
-              <tr v-for="i in 3" :key="i" :class="`${i % 2 === 0 ? 'bg:secondary' : ''}`">
-                <td>{{ i }}</td>
+              <tr v-for="(item, index) in follow" :key="item.id" :class="`${index % 2 === 0 ? 'bg:secondary' : ''}`">
                 <td>
-                  <div class="flex ai:center">
-                    <div class="m:4|16">
-                      <img :src="getImgUrl(`vtuber${i}.jpg`)" alt="article" class="w:48 r:50%">
-                    </div>
-                    <p> {{ `名稱${i}` }}</p>
+                  <div class="flex jc:start ai:center">
+                    <img :src="item.imgUrl" alt="article" class="mx:16 w:40 r:50%">
+                    <p>{{ item.name }}</p>
                   </div>
                 </td>
-                <td>{{ (4 - i) * 100000 }}</td>
+                <td>{{ (item.YouTube !== undefined ? item.YouTube.subscriber.count : 0) + (item.Twitch !== undefined ?
+                  item.Twitch.follower.count : 0) }}</td>
+                <td>
+                  <a :href="popular(item.popularVideo)" target="_blank" class="f:20 fg:primary inline-block px:8"><i
+                      class="bi bi-play-btn-fill"></i></a>
+                </td>
               </tr>
             </table>
           </div>
@@ -114,20 +134,18 @@ if (livestreamsResult.status.value === 'success') {
               <NuxtLink to="/livestreams" class="inline-block">直播</NuxtLink>
             </p>
             <div class="overflow-x:auto">
-              <h2 class="f:24 mb:16 t:center">實況中</h2>
-              <table class="w:full white-space:nowrap t:center {p:8|16;}>tr>td">
+              <h2 class="f:24 mb:16 t:center">實況當中</h2>
+              <table class="w:full white-space:nowrap t:center {p:8;}>tr>td">
                 <tr class="f:bold f:18 {by:1|solid|gray;bg:gray-10;}>td">
                   <td>名稱</td>
-                  <td>開始時間</td>
+                  <td class="w:200">開始時間</td>
                   <td>連結</td>
                 </tr>
                 <tr v-for="(item, index) in livestreams" :key="item.id"
                   :class="`${(index + 1) % 2 === 1 ? 'bg:secondary' : ''}`">
                   <td>
-                    <div class="flex ai:center">
-                      <div class="m:4|16">
-                        <img :src="item.imgUrl" alt="article" class="w:48 r:50%">
-                      </div>
+                    <div class="flex jc:start ai:center">
+                      <img :src="item.imgUrl" alt="article" class="mx:16 w:40 r:50%">
                       <p> {{ item.name }}</p>
                     </div>
                   </td>

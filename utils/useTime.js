@@ -37,8 +37,20 @@ export default function () {
             }
         }
         return result;
-    }
+    };
+    const liveCurrent = (data) => {
+        const currentTime = dayjs();
+        let closestIndex = 0;
+        for (let i = 0; i < data.length; i++) {
+            const time = dayjs.utc(data[i].startTime).local();
+            if (time.isAfter(currentTime)) {
+                closestIndex = i;
+                break;
+            }
+        }
+        return closestIndex;
+    };
     return {
-        toLocal, live3
+        toLocal, live3, liveCurrent
     }
 };

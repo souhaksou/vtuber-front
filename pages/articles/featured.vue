@@ -6,7 +6,7 @@
     <div class="max-w:screen-lg mx:auto">
       <h1 class="fg:primary f:36 f:bold t:center mb:32">文章精選</h1>
       <!-- 資料 -->
-      <div class=" bg:secondary p:32">
+      <div class="bg:secondary p:32">
         <p class="mb:16">從0開始的R語言教學，無程式基礎可、無R語言經驗可、無數學能力可。文章清單包含已經寫好及預計將會完成的：</p>
         <br>
         <h2 class="f:24 mb:16">基礎：認識R語言</h2>

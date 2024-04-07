@@ -1,15 +1,15 @@
 <script setup>
 import pagination from '@/components/nav/pagination.vue';
 
-const { toLocal, liveCurrent } = useTime();
 const { deepCopy } = useCopy();
+const { popular, checkFollow } = useCheck();
 
-const livestreamsUrl = 'https://raw.githubusercontent.com/TaiwanVtuberData/TaiwanVTuberTrackingDataJson/master/api/v2/TW/livestreams/all.json';
-const livestreams = ref([]);
+const followUrl = 'https://raw.githubusercontent.com/TaiwanVtuberData/TaiwanVTuberTrackingDataJson/master/api/v2/TW/vtubers/all.json';
+const follow = ref([]);
 const search = ref('');
 const data = computed(() => {
   current.value = 1;
-  return livestreams.value.filter(element => element.name.includes(search.value));
+  return follow.value.filter(element => element.name.includes(search.value));
 });
 const show = 10;
 const max = computed(() => {
@@ -28,15 +28,9 @@ const paginationShow = (num) => {
   }
 };
 
-const livestreamsResult = await useFetch(livestreamsUrl, { method: 'GET' });
-if (livestreamsResult.status.value === 'success') {
-  livestreams.value = deepCopy(JSON.parse(livestreamsResult.data.value).livestreams);
-  setTimeout(() => {
-    if (livestreams.value.length > 0) {
-      const index = liveCurrent(livestreams.value) + 1;
-      current.value = Math.floor(index / show) + (index % show > 0 ? 1 : 0);
-    }
-  }, 100);
+const followResult = await useFetch(followUrl, { method: 'GET' });
+if (followResult.status.value === 'success') {
+  follow.value = deepCopy(JSON.parse(followResult.data.value).VTubers);
 }
 
 </script>
@@ -44,8 +38,8 @@ if (livestreamsResult.status.value === 'success') {
 <template>
   <section class="p:32">
     <div class="max-w:screen-lg mx:auto">
-      <h1 class="fg:primary f:36 f:bold t:center mb:32">直播標題</h1>
-      <template v-if="livestreams.length > 0">
+      <h1 class="fg:primary f:36 f:bold t:center mb:32">標題</h1>
+      <template v-if="follow.length > 0">
         <div class="flex jc:end mb:32">
           <input v-model="search" type="text" class="inline-block w:full max-w:160 p:4|18 r:4 b:1|solid|gray"
             placeholder="篩選名稱">
@@ -54,8 +48,8 @@ if (livestreamsResult.status.value === 'success') {
           <table class="w:full t:center {p:16|8;}>tr>td">
             <tr class="f:bold f:18 {by:1|solid|gray;bg:gray-10;}>td">
               <td class="w:240">名稱</td>
-              <td class="w:200">開始時間</td>
-              <td>標題</td>
+              <td>Youtube</td>
+              <td>Twitch</td>
               <td>連結</td>
             </tr>
             <template v-for="(item, index) in data" :key="`livestream${index}`">
@@ -66,11 +60,13 @@ if (livestreamsResult.status.value === 'success') {
                     <p> {{ item.name }}</p>
                   </div>
                 </td>
-                <td>{{ toLocal(item.startTime) }}</td>
-                <td class="t:left">{{ item.title }}</td>
+                <td>{{ checkFollow(item, 'YouTube') }}</td>
+                <td>{{ checkFollow(item, 'Twitch') }}</td>
                 <td>
-                  <a :href="item.videoUrl" target="_blank" class="f:20 fg:primary inline-block px:8"><i
-                      class="bi bi-play-btn-fill"></i></a>
+                  <template v-if="item.popularVideo">
+                    <a :href="popular(item.popularVideo)" target="_blank" class="f:20 fg:primary inline-block px:8"><i
+                        class="bi bi-play-btn-fill"></i></a>
+                  </template>
                 </td>
               </tr>
             </template>

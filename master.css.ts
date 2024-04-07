@@ -6,6 +6,7 @@ export default {
   variables: {
     primary: "#E26488",
     secondary: "#FDF5F9",
+    third:"#401C26",
     link: "#FA8072",
   },
   semantics: {},

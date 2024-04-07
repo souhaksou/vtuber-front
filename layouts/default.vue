@@ -9,8 +9,5 @@ import navbar from '@/components/nav/navbar.vue';
         <main>
             <slot />
         </main>
-        <footer>
-            <p>footer</p>
-        </footer>
     </div>
 </template>

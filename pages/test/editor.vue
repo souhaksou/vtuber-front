@@ -1,6 +1,6 @@
 <script setup>
 definePageMeta({
-    layout: 'login'
+    layout: 'nothing'
 });
 
 import '@wangeditor/editor/dist/css/style.css';

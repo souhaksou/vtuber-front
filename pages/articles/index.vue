@@ -49,7 +49,7 @@ const searchOption = ref('');
             class="inline-block p:4|8 r:4 fg:white bg:primary b:1|solid|primary transition:400ms {fg:primary;bg:transparent;}:hover">
             搜尋</a>
           <div class="w:32"></div>
-          <input type="text" class="inline-block w:full max-w:160 p:4|18 r:4 b:1|solid|gray">
+          <input type="text" class="inline-block w:full max-w:160 p:4|18 r:4 b:1|solid|gray" placeholder="篩選名稱">
         </div>
       </div>
       <!-- 文章 -->

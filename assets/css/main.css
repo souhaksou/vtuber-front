@@ -28,8 +28,8 @@ table {
     overflow-y: auto;
 }
 
-@media (min-width: 768px) {
+/* @media (min-width: 768px) {
     .modal-container {
         padding: 32px !important;
     }
-}
+} */

@@ -9,8 +9,5 @@ import admin from '@/components/nav/navbarAdmin.vue';
         <main>
             <slot />
         </main>
-        <footer>
-            <p>admin footer</p>
-        </footer>
     </div>
 </template>
