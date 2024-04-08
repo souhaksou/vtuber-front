@@ -39,9 +39,6 @@ const getData = async () => {
 };
 
 const addCategory = async () => {
-  if (data.value.length === 0) {
-    return;
-  }
   const result = await promptModal(categoryModal, { type: 'add', item: data.value });
   if (result && result.isConfirmed === true) {
     try {
@@ -73,9 +70,7 @@ const addCategory = async () => {
 };
 
 const editCategory = async (index) => {
-  const item = deepCopy(data.value);
-  item.index = index;
-  const result = await promptModal(categoryModal, { type: 'edit', item: item });
+  const result = await promptModal(categoryModal, { type: 'edit', index: index, item: data.value });
   if (result && result.isConfirmed === true) {
     try {
       const res = await $axios({
@@ -168,8 +163,7 @@ const addSubcategory = async (item) => {
 };
 
 const editSubcategory = async (item, ii) => {
-  item.index = ii;
-  const result = await promptModal(subcategoryModal, { type: 'edit', item: item });
+  const result = await promptModal(subcategoryModal, { type: 'edit', index: ii, item: item });
   if (result && result.isConfirmed === true) {
     try {
       const res = await $axios({

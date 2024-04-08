@@ -5,7 +5,8 @@ import textMsg from '@/components/modal/textMsg.vue';
 
 const props = defineProps({
     type: String,
-    item: Object
+    item: Object,
+    index: Number
 });
 
 const emit = defineEmits();
@@ -29,7 +30,7 @@ const subcategoryShow = ref('');
 
 onMounted(() => {
     if (props.type === 'edit') {
-        const temp = props.item[props.item.index];
+        const temp = props.item[props.index];
         name.value = temp.name;
         show.value = temp.show;
         id.value = temp._id;

@@ -21,16 +21,13 @@ onBeforeModalClose((event) => {
 
 // emit
 const name = ref('');
-const show = ref('');
 
-// 檢查
-const id = ref(null);
+const id = ref('')
 
 onMounted(() => {
     if (props.type === 'edit') {
-        const temp = props.item.subcategories[props.index];
+        const temp = props.item[props.index];
         name.value = temp.name;
-        show.value = temp.show;
         id.value = temp._id;
     }
 });
@@ -40,38 +37,21 @@ const confirm = async () => {
         await pushModal(textMsg, { msg: '請輸入名稱' });
         return;
     }
-    if (props.type === 'add') {
-        const check = props.item.subcategories.some(item => item.name === name.value);
-        if (check === true) {
-            await pushModal(textMsg, { msg: `${name.value} 已經存在` });
-            return;
-        }
-        const res = {
-            isConfirmed: true,
-            data: {
-                name: name.value,
-                show: show.value,
-            }
-        };
-        res.data.categoryId = props.item._id;
-        emit(Modal.EVENT_PROMPT, res);
+    const check = props.item.some(item => item.name === name.value);
+    if (check === true) {
+        await pushModal(textMsg, { msg: `${name.value} 已經存在` });
+        return;
     }
-    else if (props.type === 'edit') {
-        const check = props.item.subcategories.some(item => item.name === name.value && item._id !== id.value);
-        if (check === true) {
-            await pushModal(textMsg, { msg: `${name.value} 已經存在` });
-            return;
+    const res = {
+        isConfirmed: true,
+        data: {
+            name: name.value
         }
-        const res = {
-            isConfirmed: true,
-            data: {
-                name: name.value,
-                show: show.value,
-            }
-        };
+    };
+    if (props.type === 'edit') {
         res.data._id = id.value;
-        emit(Modal.EVENT_PROMPT, res);
     }
+    emit(Modal.EVENT_PROMPT, res);
 };
 
 </script>
@@ -81,11 +61,8 @@ const confirm = async () => {
         <div class="flex jc:end mb:16">
             <button class="block" @click="close"><i class="bi bi-x-lg fg:black f:20"></i></button>
         </div>
-        <p class="f:24 f:bold t:center mb:16">{{ `${props.item.name}（${props.item.show}）` }}</p>
         <p class="mb:8">名稱</p>
         <input type="text" class="block w:full p:4|8 r:4 b:1|solid|gray mb:16" v-model="name">
-        <p class="mb:8">中文</p>
-        <input type="text" class="block w:full p:4|8 r:4 b:1|solid|gray mb:16" v-model="show">
         <div class="h:16"></div>
         <div class="flex jc:center ai:center">
             <a @click="confirm"
