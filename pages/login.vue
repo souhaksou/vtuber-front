@@ -50,7 +50,6 @@ const submit = async () => {
         });
         if (res.data.success === true) {
             const { token, expirationDate } = res.data;
-            console.log(token, expirationDate);
             localStorage.setItem("token", token);
             localStorage.setItem("expirationDate", expirationDate);
             router.push('/admin');
