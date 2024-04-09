@@ -1,5 +1,28 @@
 <script setup>
-const searchOption = ref('');
+const runtimeConfig = useRuntimeConfig();
+const { toLocal } = useTime();
+// const searchOption = ref('');
+
+const article = ref([]);
+
+const url = `${runtimeConfig.public.API_BASE_URL}/api/article`;
+const res = await useFetch(url, { method: 'GET' });
+
+if (res.status.value === 'success') {
+  article.value = res.data.value.data;
+}
+
+const search = ref('');
+const data = computed(() => {
+  return article.value.filter(element => element.articleId.title.includes(search.value));
+});
+
+const gotoArticle = (item) => {
+  let result = '/articles/' + item.articleId.subcategoryId.categoryId.name + '/' + item.articleId.subcategoryId.name + '/' + item.articleId.slug;
+  // `/articles/${item.articleId.subcategoryId.categoryId.name / ${ item.articleId.subcategoryId.name } /${item.articleId.slug}`;
+  return result;
+};
+
 </script>
 
 <template>
@@ -7,7 +30,7 @@ const searchOption = ref('');
     <div class="max-w:screen-lg mx:auto">
       <h1 class="fg:primary f:36 f:bold t:center mb:32">文章列表</h1>
       <!-- 搜尋 -->
-      <div class="flex jc:space-between ai:center mb:32">
+      <!-- <div class="flex jc:space-between ai:center mb:32">
         <div class="flex ai:center">
           <div class="flex ai:center">
             <p class="f:bold">選項</p>
@@ -51,16 +74,29 @@ const searchOption = ref('');
           <div class="w:32"></div>
           <input type="text" class="inline-block w:full max-w:160 p:4|18 r:4 b:1|solid|gray" placeholder="篩選名稱">
         </div>
-      </div>
+      </div> -->
       <!-- 文章 -->
+      <div class="flex jc:end ai:center mb:32">
+        <a
+          class="inline-block p:4|8 r:4 fg:white bg:primary b:1|solid|primary transition:400ms {fg:primary;bg:transparent;}:hover">
+          搜尋</a>
+        <div class="w:32"></div>
+        <input type="text" class="inline-block w:full max-w:160 p:4|18 r:4 b:1|solid|gray" placeholder="篩選名稱"
+          v-model="search">
+      </div>
       <div class="bg:secondary p:32 grid-cols:1 gap:32">
-        <div class="flex jc:space-between ai:center" v-for="i in 1" :key="i">
+        <div class="flex jc:space-between ai:center" v-for="(item, index) in data" :key="`article${index}`">
           <div class="w:full max-w:screen-xs">
             <h2 class="f:24 mb:8">
-              <a class="fg:link">[資訊整理] 台灣VTUBER產業發展現況</a>
+              <NuxtLink :to="gotoArticle(item)" class="fg:link">
+                <{{ item.articleId.title }}</NuxtLink>
             </h2>
-            <p class="f:14 mb:16">2024-02-28 經驗分享, 資訊整理</p>
-            <p>台灣VTuber產業怎麼分工？有哪些企業投入？發展現況如何？本文帶你看。 日本兩大VTuber經紀公司巨擘AN…</p>
+            <p class="f:14 mb:16">
+              {{
+                `${toLocal(item.articleId.createdAt)}&nbsp;&nbsp;${item.articleId.subcategoryId.categoryId.show}&nbsp;&nbsp;${item.articleId.subcategoryId.show}`
+              }}
+            </p>
+            <p>{{ item.articleId.description }}</p>
           </div>
           <img class="max-w:200"
             src="https://i0.wp.com/r-lover.com/wp-content/uploads/2024/02/IMG_20240224_131827.jpg?resize=240%2C180&ssl=1"

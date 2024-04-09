@@ -1,6 +1,4 @@
 <script setup>
-import '@wangeditor/editor/dist/css/style.css';
-import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 import { Modal, closeModal, pushModal, onBeforeModalClose } from 'jenesius-vue-modal';
 
 import textMsg from '@/components/modal/textMsg.vue';
@@ -21,42 +19,23 @@ onBeforeModalClose((event) => {
 });
 
 // emit
-const text = ref('');
+const articleId = ref('');
 
 onMounted(() => {
     if (props.type === 'edit') {
-        text.value = props.item.text;
+        articleId.value = props.item.articleId._id;
     }
 });
 
-// 編輯器實例必須用 shallowRef
-const editorRef = shallowRef();
-
-// HTML的內容
-const mode = 'default';
-const toolbarConfig = {};
-const editorConfig = { placeholder: '請輸入內容' };
-
-// 銷毀編輯器
-onBeforeUnmount(() => {
-    const editor = editorRef.value;
-    if (editor == null) return;
-    editor.destroy();
-});
-
-const handleCreated = (editor) => {
-    editorRef.value = editor; // 紀錄 editor 實例
-};
-
 const confirm = async () => {
-    if (text.value.length === 0) {
-        await pushModal(textMsg, { msg: '請輸入內容' });
+    if (articleId.value.length === 0) {
+        await pushModal(textMsg, { msg: '請輸入 id' });
         return;
     }
     const res = {
         isConfirmed: true,
         data: {
-            text: text.value
+            articleId: articleId.value
         }
     };
     if (props.type === 'edit') {
@@ -68,18 +47,12 @@ const confirm = async () => {
 </script>
 
 <template>
-    <div class="bg:white p:16|20 r:8 w:full max-w:screen-lg h:full max-h:calc(100vh-32px)">
+    <div class="bg:white p:16|20 r:8 w:full max-w:360">
         <div class="flex jc:end mb:16">
             <button class="block" @click="close"><i class="bi bi-x-lg fg:black f:20"></i></button>
         </div>
-        <ClientOnly>
-            <div style="border: 1px solid #ccc">
-                <Toolbar style="border-bottom: 1px solid #ccc" :editor="editorRef" :defaultConfig="toolbarConfig"
-                    :mode="mode" />
-                <Editor style="height: 600px; overflow-y: hidden;" v-model="text" :defaultConfig="editorConfig"
-                    :mode="mode" @onCreated="handleCreated" />
-            </div>
-        </ClientOnly>
+        <p class="mb:8">id</p>
+        <input type="text" class="block w:full p:4|8 r:4 b:1|solid|gray mb:16" v-model="articleId">
         <div class="h:16"></div>
         <div class="flex jc:center ai:center">
             <a @click="confirm"

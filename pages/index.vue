@@ -30,15 +30,30 @@ if (followResult.status.value === 'success') {
   follow.value = arr;
 }
 
+const runtimeConfig = useRuntimeConfig();
+
+const banner = ref([]);
+const article = ref([]);
+const chart = ref([]);
+
+const url = `${runtimeConfig.public.API_BASE_URL}/api/home`;
+const res = await useFetch(url, { method: 'GET' });
+
+if (res.status.value === 'success') {
+  article.value = res.data.value.data.article;
+  banner.value = res.data.value.data.banner;
+  chart.value = res.data.value.data.chart;
+}
+
 </script>
 <template>
   <!-- banner -->
   <section class="py:32">
     <!-- <h1>title</h1> -->
     <Carousel :autoplay="2000" :items-to-show="2" :wrap-around="true" :transition="1000" :pauseAutoplayOnHover="true">
-      <Slide v-for="item in 5" :key="item">
+      <Slide v-for="(item, index) in banner" :key="`banner${index}`">
         <div class="carousel__item">
-          <img :src="getImgUrl(`banner${item}.jpg`)" alt="img">
+          <img :src="item.bannerUrl" alt="img">
         </div>
       </Slide>
     </Carousel>
@@ -51,16 +66,28 @@ if (followResult.status.value === 'success') {
           <NuxtLink to="/articles/featured" class="inline-block">精選文章</NuxtLink>
         </p>
         <div class="grid-cols:2 gap:32 mb:64">
-          <div v-for="i in 6" :key="i" class="bg:secondary r:4">
-            <img :src="getImgUrl(`article${i}.jpg`)" alt="article" class="r:4">
+          <!-- {
+                "articleId": {
+                    "_id": "66152ed9c92ff99731072bdd",
+                    "title": "test2",
+                    "description": "test2",
+                    "subcategoryId": {
+                        "name": "ba",
+                        "categoryId": {
+                            "name": "B"
+                        }
+                    },
+                    "slug": "test2"
+                }
+            } -->
+          <div v-for="(item, index) in article" :key="`article${index}`" class="bg:secondary r:4">
+            <div class="aspect:3/2 w:full rel overflow:hidden">
+              <img :src="item.articleId.imgUrl" alt="article"
+                class="r:4 w:full abs top:50% left:50% translate(-50%,-50%)">
+            </div>
             <div class="p:32|16">
-              <h2 class="f:24 mb:16">{{ `標題${i}` }}</h2>
-              <p class="text-ellipsis fg:gray">
-                布辛寺別房珠汗人草拉乙追次到幾，幾土重羊半南雪象助穴朱內，里老園教白果什習今害尺泉起陽習借會申哥。
-                隻唱步戶問裝同怕東卜苗金寸經福因抱。間笑祖千怪用乞豆：童地現耍消見快坐：方的飯青車大師頁唱。
-                布辛寺別房珠汗人草拉乙追次到幾，幾土重羊半南雪象助穴朱內，里老園教白果什習今害尺泉起陽習借會申哥。
-                隻唱步戶問裝同怕東卜苗金寸經福因抱。間笑祖千怪用乞豆：童地現耍消見快坐：方的飯青車大師頁唱。
-              </p>
+              <h2 class="f:24 mb:16">{{ item.articleId.title }}</h2>
+              <p class="text-ellipsis fg:gray">{{ item.articleId.description }}</p>
             </div>
           </div>
         </div>
@@ -162,7 +189,13 @@ if (followResult.status.value === 'success') {
             <p class="fg:primary f:36 f:bold t:center mb:32">
               <NuxtLink to="/charts" class="inline-block">圖表</NuxtLink>
             </p>
-            <div>圖表</div>
+            <template v-for="(item, index) in chart" :key="`chart${index}`">
+              <h2 class="f:24 mb:16 t:center">{{ item.name }}</h2>
+              <div>
+                <iframe :src="item.chartUrl" allowfullscreen :class="`aspect:${item.width}/${item.height}`"
+                  class="w:full max-w:600 mx:auto"></iframe>
+              </div>
+            </template>
           </div>
         </div>
       </div>
