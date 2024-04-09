@@ -45,6 +45,11 @@ if (res.status.value === 'success') {
   chart.value = res.data.value.data.chart;
 }
 
+const gotoArticle = (item) => {
+  let result = '/articles/' + item.articleId.subcategoryId.categoryId.name + '/' + item.articleId.subcategoryId.name + '/' + item.articleId.slug;
+  return result;
+};
+
 </script>
 <template>
   <!-- banner -->
@@ -66,27 +71,15 @@ if (res.status.value === 'success') {
           <NuxtLink to="/articles/featured" class="inline-block">精選文章</NuxtLink>
         </p>
         <div class="grid-cols:2 gap:32 mb:64">
-          <!-- {
-                "articleId": {
-                    "_id": "66152ed9c92ff99731072bdd",
-                    "title": "test2",
-                    "description": "test2",
-                    "subcategoryId": {
-                        "name": "ba",
-                        "categoryId": {
-                            "name": "B"
-                        }
-                    },
-                    "slug": "test2"
-                }
-            } -->
           <div v-for="(item, index) in article" :key="`article${index}`" class="bg:secondary r:4">
             <div class="aspect:3/2 w:full rel overflow:hidden">
               <img :src="item.articleId.imgUrl" alt="article"
                 class="r:4 w:full abs top:50% left:50% translate(-50%,-50%)">
             </div>
             <div class="p:32|16">
-              <h2 class="f:24 mb:16">{{ item.articleId.title }}</h2>
+              <h2 class="f:24 mb:16">
+                <NuxtLink :to="gotoArticle(item)" class="fg:link">{{ item.articleId.title }}</NuxtLink>
+              </h2>
               <p class="text-ellipsis fg:gray">{{ item.articleId.description }}</p>
             </div>
           </div>

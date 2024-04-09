@@ -19,7 +19,6 @@ const data = computed(() => {
 
 const gotoArticle = (item) => {
   let result = '/articles/' + item.articleId.subcategoryId.categoryId.name + '/' + item.articleId.subcategoryId.name + '/' + item.articleId.slug;
-  // `/articles/${item.articleId.subcategoryId.categoryId.name / ${ item.articleId.subcategoryId.name } /${item.articleId.slug}`;
   return result;
 };
 
@@ -77,10 +76,10 @@ const gotoArticle = (item) => {
       </div> -->
       <!-- 文章 -->
       <div class="flex jc:end ai:center mb:32">
-        <a
+        <!-- <a
           class="inline-block p:4|8 r:4 fg:white bg:primary b:1|solid|primary transition:400ms {fg:primary;bg:transparent;}:hover">
           搜尋</a>
-        <div class="w:32"></div>
+        <div class="w:32"></div> -->
         <input type="text" class="inline-block w:full max-w:160 p:4|18 r:4 b:1|solid|gray" placeholder="篩選名稱"
           v-model="search">
       </div>
@@ -88,8 +87,7 @@ const gotoArticle = (item) => {
         <div class="flex jc:space-between ai:center" v-for="(item, index) in data" :key="`article${index}`">
           <div class="w:full max-w:screen-xs">
             <h2 class="f:24 mb:8">
-              <NuxtLink :to="gotoArticle(item)" class="fg:link">
-                <{{ item.articleId.title }}</NuxtLink>
+              <NuxtLink :to="gotoArticle(item)" class="fg:link">{{ item.articleId.title }}</NuxtLink>
             </h2>
             <p class="f:14 mb:16">
               {{
@@ -98,9 +96,7 @@ const gotoArticle = (item) => {
             </p>
             <p>{{ item.articleId.description }}</p>
           </div>
-          <img class="max-w:200"
-            src="https://i0.wp.com/r-lover.com/wp-content/uploads/2024/02/IMG_20240224_131827.jpg?resize=240%2C180&ssl=1"
-            alt="img">
+          <img class="max-w:200" :src="item.articleId.imgUrl" alt="img">
         </div>
       </div>
       <!-- pagination -->
