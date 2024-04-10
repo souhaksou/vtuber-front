@@ -36,14 +36,14 @@ onMounted(() => {
     <div class="max-w:screen-xs mx:auto">
       <template v-if="data">
         <h1 class="fg:primary f:36 f:bold t:center mb:32">{{ data.title }}</h1>
-        <div class="bg:secondary p:32|48 lh:2.0">
+        <div class="bg:secondary lh:2.0 p:16 p:32|48@xs">
           <p class="mb:16"> {{
-            `${toLocal(data.createdAt)}&nbsp;&nbsp;${data.subcategoryId.categoryId.show}&nbsp;/&nbsp;${data.subcategoryId.show}`
-          }}</p>
+        `${toLocal(data.createdAt)}&nbsp;&nbsp;${data.subcategoryId.categoryId.show}&nbsp;/&nbsp;${data.subcategoryId.show}`
+      }}</p>
           <div class="mb:32">
             <img :src="data.imgUrl" alt="img">
           </div>
-          <div class="p:16|32 r:4 bg:#F5F5F5 mb:32">
+          <div class="r:4 bg:#F5F5F5 mb:32 p:8|16 p:16|32@xs">
             <blockquote>
               {{ `❝&nbsp;&nbsp;${data.blockquote}&nbsp;&nbsp;❞` }}
             </blockquote>

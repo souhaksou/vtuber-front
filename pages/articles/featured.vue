@@ -24,12 +24,12 @@ onMounted(() => {
 </script>
 <template>
   <section class="p:32">
-    <div class="max-w:screen-lg mx:auto">
+    <div class="max-w:screen-xs mx:auto">
       <h1 class="fg:primary f:36 f:bold t:center mb:32">文章精選</h1>
       <!-- 資料 -->
       <template v-if="data.length > 0">
         <div v-for="(item, index) in data" :key="`text${index}`">
-          <div ref="container" class="bg:secondary p:32" v-html="item.text"></div>
+          <div ref="container" class="bg:secondary p:16 p:32@xs" v-html="item.text"></div>
         </div>
       </template>
     </div>

@@ -84,22 +84,27 @@ const gotoArticle = (item) => {
           v-model="search">
       </div>
       <div class="bg:secondary p:32 grid-cols:1 gap:32">
-        <div class="flex jc:space-between ai:center" v-for="(item, index) in data" :key="`article${index}`">
-          <div class="w:full max-w:screen-xs">
-            <h2 class="f:24 mb:8">
-              <NuxtLink :to="gotoArticle(item)" class="fg:link">{{ item.articleId.title }}</NuxtLink>
-            </h2>
-            <p class="f:14 mb:16">
-              {{
-                `${toLocal(item.articleId.createdAt)}&nbsp;&nbsp;${item.articleId.subcategoryId.categoryId.show}&nbsp;&nbsp;${item.articleId.subcategoryId.show}`
-              }}
-            </p>
-            <p>{{ item.articleId.description }}</p>
+        <div v-for="(item, index) in data" :key="`article${index}`">
+          <h2 class="f:24 mb:16">
+            <NuxtLink :to="gotoArticle(item)" class="fg:link">{{ item.articleId.title }}</NuxtLink>
+          </h2>
+          <p class="f:14 mb:16 fg:gray">
+            {{
+            `${toLocal(item.articleId.createdAt)}&nbsp;&nbsp;${item.articleId.subcategoryId.categoryId.show}&nbsp;&nbsp;${item.articleId.subcategoryId.show}`
+          }}
+          </p>
+          <div class="flex@xs flex:row-reverse jc:space-between ai:start">
+            <div class="aspect:3/2 w:full rel overflow:hidden mb:16 {mb:0;max-w:200;}@xs ">
+              <img class="w:full abs top:50% left:50% translate(-50%,-50%)" :src="item.articleId.imgUrl" alt="img">
+            </div>
+            <div class="w:32"></div>
+            <div class="w:full max-w:screen-xs">
+              <p>{{ item.articleId.description }}</p>
+            </div>
           </div>
-          <img class="max-w:200" :src="item.articleId.imgUrl" alt="img">
         </div>
       </div>
-      <!-- pagination -->
     </div>
+    <!-- pagination -->
   </section>
 </template>

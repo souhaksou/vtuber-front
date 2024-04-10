@@ -14,7 +14,8 @@ if (res.status.value === 'success') {
 <template>
   <section class="p:32">
     <div class="max-w:screen-lg mx:auto">
-      <div class="grid-cols:1 gap:64">
+      <h1 class="fg:primary f:36 f:bold t:center mb:32">圖表標題</h1>
+      <div class="grid-cols:1 gap:32 gap:64@xs">
         <div v-for="(item, index) in data" :key="`chart${index}`">
           <iframe :src="item.chartUrl" allowfullscreen :class="`aspect:${item.width}/${item.height}`"
             class="w:full max-w:600 mx:auto"></iframe>
