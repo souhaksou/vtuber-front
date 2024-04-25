@@ -63,11 +63,47 @@ const breakpoints = ref({
   1024: { itemsToShow: 2, }
 });
 
+const h1 = ref('');
+const seo = ref(null);
+const seoUrl = `${runtimeConfig.public.API_BASE_URL}/api/seo`;
+const seoRes = await useFetch(seoUrl, {
+  method: 'POST',
+  body: JSON.stringify({
+    page: 'index'
+  })
+});
+
+const setSeo = (obj) => {
+  h1.value = obj.h1;
+  useHead({
+    title: obj.title,
+    // link: [
+    //   { rel: 'canonical', href: window.location.href }
+    // ],
+    meta: [
+      { name: 'description', content: obj.description },
+      { property: 'og:title', content: obj.title },
+      { property: 'og:locale', content: 'zh_TW' },
+      { property: 'og:description', content: obj.description },
+      { property: 'og:image', content: obj.imgUrl },
+      { property: 'og:type', content: obj.type },
+      // { property: 'og:url', content: window.location.href },
+      { property: 'og:site_name', content: 'vtuber' },
+      { name: 'author', content: obj.author }
+    ],
+  });
+};
+
+if (seoRes.status.value === 'success') {
+  seo.value = seoRes.data.value.data;
+  setSeo(seo.value);
+}
+
 </script>
 <template>
   <!-- banner -->
   <section class="py:64">
-    <!-- <h1>title</h1> -->
+    <h1 class="hide">{{ h1 }}</h1>
     <Carousel v-bind="settings" :breakpoints="breakpoints">
       <Slide v-for="(item, index) in banner" :key="`banner${index}`">
         <div class="carousel__item">

@@ -66,6 +66,10 @@ const toggleHighlight = async (item) => {
   }
 };
 
+onMounted(async () => {
+  await getData();
+});
+
 </script>
 
 <template>

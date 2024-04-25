@@ -224,6 +224,10 @@ const deleteSubcategory = async (item) => {
   }
 };
 
+onMounted(async () => {
+  await getData();
+});
+
 </script>
 
 <template>

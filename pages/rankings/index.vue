@@ -1,4 +1,6 @@
 <script setup>
+const runtimeConfig = useRuntimeConfig();
+
 import pagination from '@/components/nav/pagination.vue';
 
 const { deepCopy } = useCopy();
@@ -33,12 +35,48 @@ if (hotResult.status.value === 'success') {
   hot.value = deepCopy(JSON.parse(hotResult.data.value).VTubers);
 }
 
+const h1 = ref('');
+const seo = ref(null);
+const seoUrl = `${runtimeConfig.public.API_BASE_URL}/api/seo`;
+const seoRes = await useFetch(seoUrl, {
+  method: 'POST',
+  body: JSON.stringify({
+    page: 'hot'
+  })
+});
+
+const setSeo = (obj) => {
+  h1.value = obj.h1;
+  useHead({
+    title: obj.title,
+    // link: [
+    //   { rel: 'canonical', href: window.location.href }
+    // ],
+    meta: [
+      { name: 'description', content: obj.description },
+      { property: 'og:title', content: obj.title },
+      { property: 'og:locale', content: 'zh_TW' },
+      { property: 'og:description', content: obj.description },
+      { property: 'og:image', content: obj.imgUrl },
+      { property: 'og:type', content: obj.type },
+      // { property: 'og:url', content: window.location.href },
+      { property: 'og:site_name', content: 'vtuber' },
+      { name: 'author', content: obj.author }
+    ],
+  });
+};
+
+if (seoRes.status.value === 'success') {
+  seo.value = seoRes.data.value.data;
+  setSeo(seo.value);
+}
+
 </script>
 
 <template>
   <section class="p:32">
     <div class="max-w:screen-lg mx:auto">
-      <h1 class="fg:primary f:36 f:bold t:center mb:32">標題</h1>
+      <h1 class="fg:primary f:36 f:bold t:center mb:32">{{ h1 }}</h1>
       <template v-if="hot.length > 0">
         <div class="flex jc:end mb:32">
           <input v-model="search" type="text" class="inline-block w:full max-w:160 p:4|18 r:4 b:1|solid|gray"

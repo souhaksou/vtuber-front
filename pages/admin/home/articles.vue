@@ -129,6 +129,10 @@ const deleteActiveArticle = async (item) => {
   }
 };
 
+onMounted(async () => {
+  await getData();
+});
+
 </script>
 
 <template>

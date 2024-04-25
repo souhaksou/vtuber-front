@@ -70,6 +70,10 @@ const editSeo = async (item) => {
     }
 };
 
+onMounted(async () => {
+    await getData();
+});
+
 </script>
 
 <template>

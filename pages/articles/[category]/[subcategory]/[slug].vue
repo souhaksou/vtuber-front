@@ -4,6 +4,26 @@ const { category, subcategory, slug } = route.params;
 const { toLocal } = useTime();
 const runtimeConfig = useRuntimeConfig();
 
+const setSeo = (obj) => {
+  useHead({
+    title: obj.title,
+    // link: [
+    //   { rel: 'canonical', href: window.location.href }
+    // ],
+    meta: [
+      { name: 'description', content: obj.description },
+      { property: 'og:title', content: obj.title },
+      { property: 'og:locale', content: 'zh_TW' },
+      { property: 'og:description', content: obj.description },
+      { property: 'og:image', content: obj.imgUrl },
+      { property: 'og:type', content: obj.type },
+      // { property: 'og:url', content: window.location.href },
+      { property: 'og:site_name', content: 'vtuber' },
+      { name: 'author', content: obj.author }
+    ],
+  });
+};
+
 const data = ref(null);
 const container = ref(null);
 
@@ -16,6 +36,7 @@ const res = await useFetch(url, {
 });
 if (res.status.value === 'success') {
   data.value = res.data.value.data;
+  setSeo(data.value);
 }
 
 const changeCss = (textContainer) => {
