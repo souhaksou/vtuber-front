@@ -22,12 +22,48 @@ const gotoArticle = (item) => {
   return result;
 };
 
+const h1 = ref('');
+const seo = ref(null);
+const seoUrl = `${runtimeConfig.public.API_BASE_URL}/api/seo`;
+const seoRes = await useFetch(seoUrl, {
+  method: 'POST',
+  body: JSON.stringify({
+    page: 'articles'
+  })
+});
+
+const setSeo = (obj) => {
+  h1.value = obj.h1;
+  useHead({
+    title: obj.title,
+    // link: [
+    //   { rel: 'canonical', href: window.location.href }
+    // ],
+    meta: [
+      { name: 'description', content: obj.description },
+      { property: 'og:title', content: obj.title },
+      { property: 'og:locale', content: 'zh_TW' },
+      { property: 'og:description', content: obj.description },
+      { property: 'og:image', content: obj.imgUrl },
+      { property: 'og:type', content: obj.type },
+      // { property: 'og:url', content: window.location.href },
+      { property: 'og:site_name', content: 'vtuber' },
+      { name: 'author', content: obj.author }
+    ],
+  });
+};
+
+if (seoRes.status.value === 'success') {
+  seo.value = seoRes.data.value.data;
+  setSeo(seo.value);
+}
+
 </script>
 
 <template>
   <section class="p:32">
     <div class="max-w:screen-lg mx:auto">
-      <h1 class="fg:primary f:36 f:bold t:center mb:32">文章列表</h1>
+      <h1 class="fg:primary f:36 f:bold t:center mb:32">{{ h1 }}</h1>
       <!-- 搜尋 -->
       <!-- <div class="flex jc:space-between ai:center mb:32">
         <div class="flex ai:center">
@@ -84,22 +120,27 @@ const gotoArticle = (item) => {
           v-model="search">
       </div>
       <div class="bg:secondary p:32 grid-cols:1 gap:32">
-        <div class="flex jc:space-between ai:center" v-for="(item, index) in data" :key="`article${index}`">
-          <div class="w:full max-w:screen-xs">
-            <h2 class="f:24 mb:8">
-              <NuxtLink :to="gotoArticle(item)" class="fg:link">{{ item.articleId.title }}</NuxtLink>
-            </h2>
-            <p class="f:14 mb:16">
-              {{
-                `${toLocal(item.articleId.createdAt)}&nbsp;&nbsp;${item.articleId.subcategoryId.categoryId.show}&nbsp;&nbsp;${item.articleId.subcategoryId.show}`
-              }}
-            </p>
-            <p>{{ item.articleId.description }}</p>
+        <div v-for="(item, index) in data" :key="`article${index}`">
+          <h2 class="f:24 mb:16">
+            <NuxtLink :to="gotoArticle(item)" class="fg:link">{{ item.articleId.title }}</NuxtLink>
+          </h2>
+          <p class="f:14 mb:16 fg:gray">
+            {{
+        `${toLocal(item.articleId.createdAt)}&nbsp;&nbsp;${item.articleId.subcategoryId.categoryId.show}&nbsp;&nbsp;${item.articleId.subcategoryId.show}`
+      }}
+          </p>
+          <div class="flex@xs flex:row-reverse jc:space-between ai:start">
+            <div class="aspect:3/2 w:full rel overflow:hidden mb:16 {mb:0;max-w:200;}@xs ">
+              <img class="w:full abs top:50% left:50% translate(-50%,-50%)" :src="item.articleId.imgUrl" alt="img">
+            </div>
+            <div class="w:32"></div>
+            <div class="w:full max-w:screen-xs">
+              <p>{{ item.articleId.description }}</p>
+            </div>
           </div>
-          <img class="max-w:200" :src="item.articleId.imgUrl" alt="img">
         </div>
       </div>
-      <!-- pagination -->
     </div>
+    <!-- pagination -->
   </section>
 </template>

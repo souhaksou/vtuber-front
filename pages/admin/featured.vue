@@ -81,6 +81,10 @@ const changeCss = (textContainer) => {
   textContainer.classList.add(`{fg:#333;ml:16;pl:6;}>ol>li`);
 };
 
+onMounted(async () => {
+  await getData();
+});
+
 </script>
 
 <template>

@@ -62,6 +62,7 @@ const getCategory = async () => {
 onMounted(async () => {
   await getCategory();
   await getTag();
+  await getData();
 });
 
 const data = ref([]);

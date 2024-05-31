@@ -4,6 +4,26 @@ const { category, subcategory, slug } = route.params;
 const { toLocal } = useTime();
 const runtimeConfig = useRuntimeConfig();
 
+const setSeo = (obj) => {
+  useHead({
+    title: obj.title,
+    // link: [
+    //   { rel: 'canonical', href: window.location.href }
+    // ],
+    meta: [
+      { name: 'description', content: obj.description },
+      { property: 'og:title', content: obj.title },
+      { property: 'og:locale', content: 'zh_TW' },
+      { property: 'og:description', content: obj.description },
+      { property: 'og:image', content: obj.imgUrl },
+      { property: 'og:type', content: obj.type },
+      // { property: 'og:url', content: window.location.href },
+      { property: 'og:site_name', content: 'vtuber' },
+      { name: 'author', content: obj.author }
+    ],
+  });
+};
+
 const data = ref(null);
 const container = ref(null);
 
@@ -16,6 +36,7 @@ const res = await useFetch(url, {
 });
 if (res.status.value === 'success') {
   data.value = res.data.value.data;
+  setSeo(data.value);
 }
 
 const changeCss = (textContainer) => {
@@ -36,14 +57,14 @@ onMounted(() => {
     <div class="max-w:screen-xs mx:auto">
       <template v-if="data">
         <h1 class="fg:primary f:36 f:bold t:center mb:32">{{ data.title }}</h1>
-        <div class="bg:secondary p:32|48 lh:2.0">
+        <div class="bg:secondary lh:2.0 p:16 p:32|48@xs">
           <p class="mb:16"> {{
-            `${toLocal(data.createdAt)}&nbsp;&nbsp;${data.subcategoryId.categoryId.show}&nbsp;/&nbsp;${data.subcategoryId.show}`
-          }}</p>
+        `${toLocal(data.createdAt)}&nbsp;&nbsp;${data.subcategoryId.categoryId.show}&nbsp;/&nbsp;${data.subcategoryId.show}`
+      }}</p>
           <div class="mb:32">
             <img :src="data.imgUrl" alt="img">
           </div>
-          <div class="p:16|32 r:4 bg:#F5F5F5 mb:32">
+          <div class="r:4 bg:#F5F5F5 mb:32 p:8|16 p:16|32@xs">
             <blockquote>
               {{ `❝&nbsp;&nbsp;${data.blockquote}&nbsp;&nbsp;❞` }}
             </blockquote>

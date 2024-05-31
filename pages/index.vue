@@ -50,12 +50,61 @@ const gotoArticle = (item) => {
   return result;
 };
 
+const settings = ref({
+  autoplay: 2000,
+  itemsToShow: 1,
+  wrapAround: true,
+  transition: 1000,
+  pauseAutoplayOnHover: true
+});
+
+const breakpoints = ref({
+  768: { itemsToShow: 1.5, },
+  1024: { itemsToShow: 2, }
+});
+
+const h1 = ref('');
+const seo = ref(null);
+const seoUrl = `${runtimeConfig.public.API_BASE_URL}/api/seo`;
+const seoRes = await useFetch(seoUrl, {
+  method: 'POST',
+  body: JSON.stringify({
+    page: 'index'
+  })
+});
+
+const setSeo = (obj) => {
+  h1.value = obj.h1;
+  useHead({
+    title: obj.title,
+    // link: [
+    //   { rel: 'canonical', href: window.location.href }
+    // ],
+    meta: [
+      { name: 'description', content: obj.description },
+      { property: 'og:title', content: obj.title },
+      { property: 'og:locale', content: 'zh_TW' },
+      { property: 'og:description', content: obj.description },
+      { property: 'og:image', content: obj.imgUrl },
+      { property: 'og:type', content: obj.type },
+      // { property: 'og:url', content: window.location.href },
+      { property: 'og:site_name', content: 'vtuber' },
+      { name: 'author', content: obj.author }
+    ],
+  });
+};
+
+if (seoRes.status.value === 'success') {
+  seo.value = seoRes.data.value.data;
+  setSeo(seo.value);
+}
+
 </script>
 <template>
   <!-- banner -->
-  <section class="py:32">
-    <!-- <h1>title</h1> -->
-    <Carousel :autoplay="2000" :items-to-show="2" :wrap-around="true" :transition="1000" :pauseAutoplayOnHover="true">
+  <section class="py:64">
+    <h1 class="hide">{{ h1 }}</h1>
+    <Carousel v-bind="settings" :breakpoints="breakpoints">
       <Slide v-for="(item, index) in banner" :key="`banner${index}`">
         <div class="carousel__item">
           <img :src="item.bannerUrl" alt="img">
@@ -70,7 +119,7 @@ const gotoArticle = (item) => {
         <p class="fg:primary f:36 f:bold t:center mb:32">
           <NuxtLink to="/articles/featured" class="inline-block">精選文章</NuxtLink>
         </p>
-        <div class="grid-cols:2 gap:32 mb:64">
+        <div class="grid-cols:1 grid-cols:2@md gap:32 mb:64">
           <div v-for="(item, index) in article" :key="`article${index}`" class="bg:secondary r:4">
             <div class="aspect:3/2 w:full rel overflow:hidden">
               <img :src="item.articleId.imgUrl" alt="article"
@@ -95,12 +144,12 @@ const gotoArticle = (item) => {
         <p class="fg:primary f:36 f:bold t:center mb:32">
           <NuxtLink to="/rankings" class="inline-block">排行</NuxtLink>
         </p>
-        <div class="grid-cols:2 gap:32">
+        <div class="grid-cols:1 grid-cols:2@md gap:32">
           <div class="overflow-x:auto">
             <h2 class="f:24 mb:16 t:center">熱門人氣</h2>
             <table class="w:full white-space:nowrap t:center {p:8;}>tr>td">
               <tr class="f:bold f:18 {by:1|solid|gray;bg:gray-10;}>td">
-                <td>名稱</td>
+                <td class="min-w:240">名稱</td>
                 <td>人氣</td>
                 <td>連結</td>
               </tr>
@@ -112,7 +161,7 @@ const gotoArticle = (item) => {
                   </div>
                 </td>
                 <td>{{ (item.YouTube !== undefined ? item.YouTube.popularity : 0) + (item.Twitch !== undefined ?
-                  item.Twitch.popularity : 0) }}</td>
+      item.Twitch.popularity : 0) }}</td>
                 <td>
                   <a :href="popular(item.popularVideo)" target="_blank" class="f:20 fg:primary inline-block px:8"><i
                       class="bi bi-play-btn-fill"></i></a>
@@ -124,7 +173,7 @@ const gotoArticle = (item) => {
             <h2 class="f:24 mb:16 t:center">訂閱追蹤</h2>
             <table class="w:full white-space:nowrap t:center {p:8;}>tr>td">
               <tr class="f:bold f:18 {by:1|solid|gray;bg:gray-10;}>td">
-                <td>名稱</td>
+                <td class="min-w:240">名稱</td>
                 <td>人數</td>
                 <td>連結</td>
               </tr>
@@ -136,7 +185,7 @@ const gotoArticle = (item) => {
                   </div>
                 </td>
                 <td>{{ (item.YouTube !== undefined ? item.YouTube.subscriber.count : 0) + (item.Twitch !== undefined ?
-                  item.Twitch.follower.count : 0) }}</td>
+      item.Twitch.follower.count : 0) }}</td>
                 <td>
                   <a :href="popular(item.popularVideo)" target="_blank" class="f:20 fg:primary inline-block px:8"><i
                       class="bi bi-play-btn-fill"></i></a>
@@ -148,17 +197,17 @@ const gotoArticle = (item) => {
       </div>
       <!-- 直播跟圖表 -->
       <div class="mx:auto">
-        <div class="grid-cols:2 gap:32">
+        <div class="grid-cols:1 grid-cols:2@md gap:32">
           <div class="overflow-x:auto">
             <p class="fg:primary f:36 f:bold t:center mb:32">
               <NuxtLink to="/livestreams" class="inline-block">直播</NuxtLink>
             </p>
+            <h2 class="f:24 mb:16 t:center">實況當中</h2>
             <div class="overflow-x:auto">
-              <h2 class="f:24 mb:16 t:center">實況當中</h2>
               <table class="w:full white-space:nowrap t:center {p:8;}>tr>td">
                 <tr class="f:bold f:18 {by:1|solid|gray;bg:gray-10;}>td">
-                  <td>名稱</td>
-                  <td class="w:200">開始時間</td>
+                  <td class="min-w:240">名稱</td>
+                  <td class="min-w:200">開始時間</td>
                   <td>連結</td>
                 </tr>
                 <tr v-for="(item, index) in livestreams" :key="item.id"
