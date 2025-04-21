@@ -1,5 +1,6 @@
 export default function () {
   const popular = (popularVideo) => {
+    if (!popularVideo) return '';
     const { type, id } = popularVideo;
     if (type === 'YouTube') {
       return `https://www.youtube.com/watch?v=${id}`;
