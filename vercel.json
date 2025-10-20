@@ -1,0 +1,25 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "nuxt.config.ts",
+            "use": "@vercel/node"
+        }
+    ],
+    "env": {
+        "NPM_CONFIG_REGISTRY": "https://registry.npmmirror.com/"
+    },
+    "build": {
+        "env": {
+            "NPM_CONFIG_REGISTRY": "https://registry.npmmirror.com/"
+        }
+    },
+    "installCommand": "npm install --prefer-online --no-audit --no-fund",
+    "buildCommand": "npm run build",
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "/.output/server/index.mjs"
+        }
+    ]
+}
