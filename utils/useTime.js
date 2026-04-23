@@ -15,6 +15,7 @@ export default function () {
         return result;
     };
     const live3 = (data) => {
+        if (!data?.length) return [];
         const result = [];
         const currentTime = dayjs();
         let closestIndex = 0;
@@ -39,6 +40,7 @@ export default function () {
         return result;
     };
     const liveCurrent = (data) => {
+        if (!data?.length) return -1;
         const currentTime = dayjs();
         let closestIndex = 0;
         for (let i = 0; i < data.length; i++) {

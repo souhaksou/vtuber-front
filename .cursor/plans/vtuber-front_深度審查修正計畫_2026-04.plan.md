@@ -25,22 +25,22 @@ todos:
     status: completed
   - id: m1-parseapierror-no-errormsg
     content: M1｜admin 頁面引入 `parseApiError` 但未引入 `errorMsg`
-    status: pending
+    status: completed
   - id: m2-modal-duplicate-validation
     content: M2｜Modal 新增模式缺少重複項目驗證
-    status: pending
+    status: completed
   - id: m3-token-in-localstorage
     content: M3｜Token 存在 localStorage（XSS 風險）
     status: pending
   - id: m4-admin-error-handling-inconsistent
     content: M4｜各 admin 頁面錯誤處理模式不一致
-    status: pending
+    status: completed
   - id: m5-deepcopy-special-types
     content: M5｜`deepCopy` 不支援 Date/Map/Set/循環引用
-    status: pending
+    status: completed
   - id: m6-usetime-empty-array
     content: M6｜`useTime.js` 不驗證空陣列
-    status: pending
+    status: completed
   - id: l1-hardcoded-github-api-url
     content: L1｜GitHub API URL 硬寫在多個頁面
     status: pending
@@ -198,9 +198,9 @@ isProject: false
 |--------|------|--------|--------|
 | Critical | 3 | 3 | 0 |
 | High | 4 | 4 | 0 |
-| Medium | 6 | 0 | 6 |
+| Medium | 6 | 5 | 1 |
 | Low | 8 | 0 | 8 |
-| **合計** | **21** | **7** | **14** |
+| **合計** | **21** | **12** | **9** |
 
 ---
 

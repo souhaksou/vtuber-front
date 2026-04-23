@@ -6,13 +6,11 @@ definePageMeta({
 import { openModal, promptModal } from 'jenesius-vue-modal';
 import accountModal from '@/components/modal/accountModal.vue';
 import okMsg from '@/components/modal/okMsg.vue';
-import errorMsg from '@/components/modal/errorMsg.vue';
-import { parseApiError } from '@/utils/parseApiError';
 
-const router = useRouter();
 const { $axios } = useNuxtApp();
 const runtimeConfig = useRuntimeConfig();
 const { getAdminTokenOrRedirect } = useAdminToken();
+const { handleAdminError } = useAdminError();
 
 const data = ref([]);
 
@@ -35,13 +33,7 @@ const getData = async () => {
             data.value = res.data.data;
         }
     } catch (error) {
-        console.error(error);
-        const parsedError = parseApiError(error);
-        if (parsedError.isTokenExpired) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('expirationDate');
-            router.push('/login');
-        }
+        await handleAdminError(error);
     }
 };
 
@@ -63,14 +55,7 @@ const editAccount = async (item) => {
                 await getData();
             }
         } catch (error) {
-            console.error(error);
-            const parsedError = parseApiError(error);
-            await openModal(errorMsg, { msg: parsedError.message });
-            if (parsedError.isTokenExpired) {
-                localStorage.removeItem('token');
-                localStorage.removeItem('expirationDate');
-                router.push('/login');
-            }
+            await handleAdminError(error);
         }
     }
 };

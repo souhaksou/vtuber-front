@@ -5,12 +5,11 @@ import categoryModal from '@/components/modal/categoryModal.vue';
 import subcategoryModal from '@/components/modal/subcategoryModal.vue';
 import confirmMsg from '@/components/modal/confirmMsg.vue';
 import okMsg from '@/components/modal/okMsg.vue';
-import { parseApiError } from '@/utils/parseApiError';
 
-const router = useRouter();
 const { $axios } = useNuxtApp();
 const runtimeConfig = useRuntimeConfig();
 const { getAdminTokenOrRedirect } = useAdminToken();
+const { handleAdminError } = useAdminError();
 
 const data = ref([]);
 
@@ -33,13 +32,7 @@ const getData = async () => {
       data.value = res.data.data;
     }
   } catch (error) {
-    console.error(error);
-    const parsedError = parseApiError(error);
-    if (parsedError.isTokenExpired) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('expirationDate');
-      router.push('/login');
-    }
+    await handleAdminError(error);
   }
 };
 
@@ -61,13 +54,7 @@ const addCategory = async () => {
         await getData();
       }
     } catch (error) {
-      console.error(error);
-      const parsedError = parseApiError(error);
-      if (parsedError.isTokenExpired) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('expirationDate');
-        router.push('/login');
-      }
+      await handleAdminError(error);
     }
   }
 };
@@ -90,13 +77,7 @@ const editCategory = async (index) => {
         await getData();
       }
     } catch (error) {
-      console.error(error);
-      const parsedError = parseApiError(error);
-      if (parsedError.isTokenExpired) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('expirationDate');
-        router.push('/login');
-      }
+      await handleAdminError(error);
     }
   }
 };
@@ -119,13 +100,7 @@ const deleteCategory = async (item) => {
         await getData();
       }
     } catch (error) {
-      console.error(error);
-      const parsedError = parseApiError(error);
-      if (parsedError.isTokenExpired) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('expirationDate');
-        router.push('/login');
-      }
+      await handleAdminError(error);
     }
   }
 };
@@ -148,13 +123,7 @@ const addSubcategory = async (item) => {
         await getData();
       }
     } catch (error) {
-      console.error(error);
-      const parsedError = parseApiError(error);
-      if (parsedError.isTokenExpired) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('expirationDate');
-        router.push('/login');
-      }
+      await handleAdminError(error);
     }
   }
 };
@@ -177,13 +146,7 @@ const editSubcategory = async (item, ii) => {
         await getData();
       }
     } catch (error) {
-      console.error(error);
-      const parsedError = parseApiError(error);
-      if (parsedError.isTokenExpired) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('expirationDate');
-        router.push('/login');
-      }
+      await handleAdminError(error);
     }
   }
 };
@@ -206,13 +169,7 @@ const deleteSubcategory = async (item) => {
         await getData();
       }
     } catch (error) {
-      console.error(error);
-      const parsedError = parseApiError(error);
-      if (parsedError.isTokenExpired) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('expirationDate');
-        router.push('/login');
-      }
+      await handleAdminError(error);
     }
   }
 };

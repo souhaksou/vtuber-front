@@ -3,12 +3,11 @@
 import { openModal, promptModal } from 'jenesius-vue-modal';
 import confirmMsg from '@/components/modal/confirmMsg.vue';
 import okMsg from '@/components/modal/okMsg.vue';
-import { parseApiError } from '@/utils/parseApiError';
 
-const router = useRouter();
 const { $axios } = useNuxtApp();
 const runtimeConfig = useRuntimeConfig();
 const { getAdminTokenOrRedirect } = useAdminToken();
+const { handleAdminError } = useAdminError();
 
 const tags = ref([]);
 // const tagShow = ref(null);
@@ -32,13 +31,7 @@ const getTag = async () => {
       tags.value = res.data.data;
     }
   } catch (error) {
-    console.error(error);
-    const parsedError = parseApiError(error);
-    if (parsedError.isTokenExpired) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('expirationDate');
-      router.push('/login');
-    }
+    await handleAdminError(error);
   }
 };
 const getCategory = async () => {
@@ -54,13 +47,7 @@ const getCategory = async () => {
       categories.value = res.data.data;
     }
   } catch (error) {
-    console.error(error);
-    const parsedError = parseApiError(error);
-    if (parsedError.isTokenExpired) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('expirationDate');
-      router.push('/login');
-    }
+    await handleAdminError(error);
   }
 };
 
@@ -85,13 +72,7 @@ const getData = async () => {
       data.value = res.data.data;
     }
   } catch (error) {
-    console.error(error);
-    const parsedError = parseApiError(error);
-    if (parsedError.isTokenExpired) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('expirationDate');
-      router.push('/login');
-    }
+    await handleAdminError(error);
   }
 };
 
@@ -114,13 +95,7 @@ const addArticle = async () => {
         await getData();
       }
     } catch (error) {
-      console.error(error);
-      const parsedError = parseApiError(error);
-      if (parsedError.isTokenExpired) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('expirationDate');
-        router.push('/login');
-      }
+      await handleAdminError(error);
     }
   }
 };
@@ -157,13 +132,7 @@ const editArticle = async (id) => {
       }
     }
   } catch (error) {
-    console.error(error);
-    const parsedError = parseApiError(error);
-    if (parsedError.isTokenExpired) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('expirationDate');
-      router.push('/login');
-    }
+    await handleAdminError(error);
   }
 };
 
@@ -185,13 +154,7 @@ const deleteArticle = async (id) => {
         await getData();
       }
     } catch (error) {
-      console.error(error);
-      const parsedError = parseApiError(error);
-      if (parsedError.isTokenExpired) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('expirationDate');
-        router.push('/login');
-      }
+      await handleAdminError(error);
     }
   }
 };

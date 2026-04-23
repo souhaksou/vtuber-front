@@ -37,8 +37,10 @@ const confirm = async () => {
         await pushModal(textMsg, { msg: '請輸入名稱' });
         return;
     }
-    const check = props.item.some(item => item.name === name.value);
-    if (check === true) {
+    const isDuplicate = props.type === 'add'
+        ? props.item.some(item => item.name === name.value)
+        : props.item.some(item => item.name === name.value && item._id !== id.value);
+    if (isDuplicate) {
         await pushModal(textMsg, { msg: `${name.value} 已經存在` });
         return;
     }

@@ -10,6 +10,7 @@ import VueClientRecaptcha from 'vue-client-recaptcha';
 import { parseApiError } from '@/utils/parseApiError';
 
 const router = useRouter();
+const { setAdminToken } = useAdminToken();
 
 const data = ref({
     account: '',
@@ -51,8 +52,7 @@ const submit = async () => {
         });
         if (res.data.success === true) {
             const { token, expirationDate } = res.data;
-            localStorage.setItem("token", token);
-            localStorage.setItem("expirationDate", expirationDate);
+            setAdminToken(token, expirationDate);
             router.push('/admin');
         }
     } catch (error) {

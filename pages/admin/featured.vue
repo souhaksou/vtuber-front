@@ -5,13 +5,12 @@ definePageMeta({
 
 import { openModal, promptModal } from 'jenesius-vue-modal';
 import okMsg from '@/components/modal/okMsg.vue';
-import { parseApiError } from '@/utils/parseApiError';
 import { sanitizeHtml } from '@/utils/sanitizeHtml';
 
-const router = useRouter();
 const { $axios } = useNuxtApp();
 const runtimeConfig = useRuntimeConfig();
 const { getAdminTokenOrRedirect } = useAdminToken();
+const { handleAdminError } = useAdminError();
 
 const data = ref([]);
 const container = ref(null);
@@ -41,13 +40,7 @@ const getData = async () => {
       data.value = res.data.data;
     }
   } catch (error) {
-    console.error(error);
-    const parsedError = parseApiError(error);
-    if (parsedError.isTokenExpired) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('expirationDate');
-      router.push('/login');
-    }
+    await handleAdminError(error);
   }
 };
 
@@ -70,13 +63,7 @@ const editFeatured = async (item) => {
         await getData();
       }
     } catch (error) {
-      console.error(error);
-      const parsedError = parseApiError(error);
-      if (parsedError.isTokenExpired) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('expirationDate');
-        router.push('/login');
-      }
+      await handleAdminError(error);
     }
   }
 };
