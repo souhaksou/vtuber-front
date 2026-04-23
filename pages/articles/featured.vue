@@ -27,7 +27,11 @@ const changeCss = (textContainer) => {
 };
 
 onMounted(() => {
-  changeCss(container.value[0]);
+  nextTick(() => {
+    if (container.value?.length) {
+      changeCss(container.value[0]);
+    }
+  });
 });
 
 const h1 = ref('');

@@ -1,7 +1,7 @@
 <script setup>
 
 import { openModal, promptModal } from 'jenesius-vue-modal';
-import activeArticleModal from '@/components/modal/activeArticleModal';
+import activeArticleModal from '@/components/modal/activeArticleModal.vue';
 import confirmMsg from '@/components/modal/confirmMsg.vue';
 import okMsg from '@/components/modal/okMsg.vue';
 import { parseApiError } from '@/utils/parseApiError';

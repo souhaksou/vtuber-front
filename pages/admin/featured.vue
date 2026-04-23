@@ -32,7 +32,9 @@ const getData = async () => {
     if (res.data.success === true) {
       data.value = res.data.data;
       nextTick(() => {
-        changeCss(container.value[0]);
+        if (container.value?.length) {
+          changeCss(container.value[0]);
+        }
       });
     }
   } catch (error) {
