@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     "vite:extendConfig"(config, { isClient }) {
       if (!isClient) return;
       config.build = config.build || {};
+      config.build.chunkSizeWarningLimit = 1000;
       config.build.rollupOptions = config.build.rollupOptions || {};
       const output = config.build.rollupOptions.output || {};
       const outputs = Array.isArray(output) ? output : [output];
