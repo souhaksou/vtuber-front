@@ -2,9 +2,11 @@
 const runtimeConfig = useRuntimeConfig();
 
 import pagination from '@/components/nav/pagination.vue';
+import { safeJsonParse } from '@/utils/safeJsonParse';
 
 const { deepCopy } = useCopy();
 const { popular, checkFollow } = useCheck();
+const pageError = ref('');
 
 const followUrl = 'https://raw.githubusercontent.com/TaiwanVtuberData/TaiwanVTuberTrackingDataJson/master/api/v2/TW/vtubers/all.json';
 const follow = ref([]);
@@ -32,7 +34,10 @@ const paginationShow = (num) => {
 
 const followResult = await useFetch(followUrl, { method: 'GET' });
 if (followResult.status.value === 'success') {
-  follow.value = deepCopy(JSON.parse(followResult.data.value).VTubers);
+  const parsed = safeJsonParse(followResult.data.value, {});
+  follow.value = deepCopy(Array.isArray(parsed?.VTubers) ? parsed.VTubers : []);
+} else if (followResult.status.value === 'error') {
+  pageError.value = '追蹤排行資料讀取失敗，請稍後再試。';
 }
 
 const h1 = ref('');
@@ -77,7 +82,10 @@ if (seoRes.status.value === 'success') {
   <section class="p:32">
     <div class="max-w:screen-lg mx:auto">
       <h1 class="fg:primary f:36 f:bold t:center mb:32">{{ h1 }}</h1>
-      <template v-if="follow.length > 0">
+      <template v-if="pageError">
+        <p class="t:center f:20 fg:red">{{ pageError }}</p>
+      </template>
+      <template v-else-if="follow.length > 0">
         <div class="flex jc:end mb:32">
           <input v-model="search" type="text" class="inline-block w:full max-w:160 p:4|18 r:4 b:1|solid|gray"
             placeholder="篩選名稱">

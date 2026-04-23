@@ -9,16 +9,24 @@ import { parseApiError } from '@/utils/parseApiError';
 const router = useRouter();
 const { $axios } = useNuxtApp();
 const runtimeConfig = useRuntimeConfig();
-const token = localStorage.getItem('token');
+const { getAdminTokenOrRedirect } = useAdminToken();
 
 const data = ref([]);
 
+const getHeadersOrRedirect = () => {
+  const token = getAdminTokenOrRedirect();
+  if (!token) return null;
+  return { token };
+};
+
 const getData = async () => {
+  const headers = getHeadersOrRedirect();
+  if (!headers) return;
   try {
     const res = await $axios({
       method: 'get',
       url: `${runtimeConfig.public.API_BASE_URL}/admin/activeArticle`,
-      headers: { token },
+      headers,
     });
     if (res.data.success === true) {
       data.value = res.data.data;
@@ -37,11 +45,13 @@ const getData = async () => {
 const addActiveArticle = async () => {
   const result = await promptModal(activeArticleModal, { type: 'add', item: {} });
   if (result && result.isConfirmed === true) {
+    const headers = getHeadersOrRedirect();
+    if (!headers) return;
     try {
       const res = await $axios({
         method: 'post',
         url: `${runtimeConfig.public.API_BASE_URL}/admin/activeArticle`,
-        headers: { token },
+        headers,
         data: result.data
       });
       if (res.data.success === true) {
@@ -64,11 +74,13 @@ const addActiveArticle = async () => {
 const editActiveArticle = async (item) => {
   const result = await promptModal(activeArticleModal, { type: 'edit', item: item });
   if (result && result.isConfirmed === true) {
+    const headers = getHeadersOrRedirect();
+    if (!headers) return;
     try {
       const res = await $axios({
         method: 'put',
         url: `${runtimeConfig.public.API_BASE_URL}/admin/activeArticle`,
-        headers: { token },
+        headers,
         data: result.data
       });
       if (res.data.success === true) {
@@ -91,11 +103,13 @@ const editActiveArticle = async (item) => {
 const deleteActiveArticle = async (item) => {
   const result = await promptModal(confirmMsg, { msg: '確認刪除' });
   if (result && result.isConfirmed === true) {
+    const headers = getHeadersOrRedirect();
+    if (!headers) return;
     try {
       const res = await $axios({
         method: 'delete',
         url: `${runtimeConfig.public.API_BASE_URL}/admin/activeArticle`,
-        headers: { token },
+        headers,
         data: { _id: item._id }
       });
       if (res.data.success === true) {

@@ -13,16 +13,16 @@ todos:
     status: completed
   - id: h1-json-parse-without-try-catch
     content: H1｜裸 `JSON.parse` 無 try-catch
-    status: pending
+    status: completed
   - id: h2-usefetch-silent-error
     content: H2｜`useFetch` 失敗時靜默無提示
-    status: pending
+    status: completed
   - id: h3-token-null-check
     content: H3｜`localStorage.getItem('token')` 未做 null 檢查
-    status: pending
+    status: completed
   - id: h4-changecss-race-condition
     content: H4｜`changeCss` 在資料載入前就執行（Race Condition）
-    status: pending
+    status: completed
   - id: m1-parseapierror-no-errormsg
     content: M1｜admin 頁面引入 `parseApiError` 但未引入 `errorMsg`
     status: pending
@@ -197,10 +197,10 @@ isProject: false
 | 嚴重度 | 總數 | 已完成 | 待處理 |
 |--------|------|--------|--------|
 | Critical | 3 | 3 | 0 |
-| High | 4 | 0 | 4 |
+| High | 4 | 4 | 0 |
 | Medium | 6 | 0 | 6 |
 | Low | 8 | 0 | 8 |
-| **合計** | **21** | **3** | **18** |
+| **合計** | **21** | **7** | **14** |
 
 ---
 

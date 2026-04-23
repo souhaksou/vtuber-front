@@ -5,11 +5,14 @@ const runtimeConfig = useRuntimeConfig();
 
 const data = ref([]);
 const container = ref(null);
+const pageError = ref('');
 const url = `${runtimeConfig.public.API_BASE_URL}/api/featured`;
 const res = await useFetch(url, { method: 'GET' });
 
 if (res.status.value === 'success') {
   data.value = res.data.value.data;
+} else if (res.status.value === 'error') {
+  pageError.value = '精選文章資料讀取失敗，請稍後再試。';
 }
 
 const sanitizedData = computed(() =>
@@ -20,18 +23,19 @@ const sanitizedData = computed(() =>
 );
 
 const changeCss = (textContainer) => {
+  if (!textContainer) return;
   textContainer.classList.add(`lh:2.0`);
   textContainer.classList.add(`{my:16;}>h2`);
   textContainer.classList.add(`{content:'\u2022';fg:#333;mr:4;}>ul>li::before`);
   textContainer.classList.add(`{fg:#333;ml:16;pl:6;}>ol>li`);
 };
 
-onMounted(() => {
-  nextTick(() => {
-    if (container.value?.length) {
-      changeCss(container.value[0]);
-    }
-  });
+watch(data, async (val) => {
+  if (!val?.length) return;
+  await nextTick();
+  if (container.value?.length) {
+    changeCss(container.value[0]);
+  }
 });
 
 const h1 = ref('');
@@ -76,7 +80,10 @@ if (seoRes.status.value === 'success') {
     <div class="max-w:screen-xs mx:auto">
       <h1 class="fg:primary f:36 f:bold t:center mb:32">{{ h1 }}</h1>
       <!-- 資料 -->
-      <template v-if="data.length > 0">
+      <template v-if="pageError">
+        <p class="t:center f:20 fg:red">{{ pageError }}</p>
+      </template>
+      <template v-else-if="data.length > 0">
         <div v-for="(item, index) in sanitizedData" :key="`text${index}`">
           <div ref="container" class="bg:secondary p:16 p:32@xs" v-html="item.safeText"></div>
         </div>

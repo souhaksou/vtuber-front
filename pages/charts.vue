@@ -2,11 +2,14 @@
 const runtimeConfig = useRuntimeConfig();
 
 const data = ref([]);
+const pageError = ref('');
 const url = `${runtimeConfig.public.API_BASE_URL}/api/chart`;
 const res = await useFetch(url, { method: 'GET' });
 
 if (res.status.value === 'success') {
   data.value = res.data.value.data;
+} else if (res.status.value === 'error') {
+  pageError.value = '圖表資料讀取失敗，請稍後再試。';
 }
 
 const h1 = ref('');
@@ -51,7 +54,8 @@ if (seoRes.status.value === 'success') {
   <section class="p:32">
     <div class="max-w:screen-lg mx:auto">
       <h1 class="fg:primary f:36 f:bold t:center mb:32">{{ h1 }}</h1>
-      <div class="grid-cols:1 gap:32 gap:64@xs">
+      <p v-if="pageError" class="t:center f:20 fg:red">{{ pageError }}</p>
+      <div v-else class="grid-cols:1 gap:32 gap:64@xs">
         <div v-for="(item, index) in data" :key="`chart${index}`">
           <iframe :src="item.chartUrl" allowfullscreen :class="`aspect:${item.width}/${item.height}`"
             class="w:full max-w:600 mx:auto"></iframe>

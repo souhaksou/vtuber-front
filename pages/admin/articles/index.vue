@@ -8,17 +8,25 @@ import { parseApiError } from '@/utils/parseApiError';
 const router = useRouter();
 const { $axios } = useNuxtApp();
 const runtimeConfig = useRuntimeConfig();
-const token = localStorage.getItem('token');
+const { getAdminTokenOrRedirect } = useAdminToken();
 
 const tags = ref([]);
 // const tagShow = ref(null);
 const categories = ref([]);
+const getHeadersOrRedirect = () => {
+  const token = getAdminTokenOrRedirect();
+  if (!token) return null;
+  return { token };
+};
+
 const getTag = async () => {
+  const headers = getHeadersOrRedirect();
+  if (!headers) return;
   try {
     const res = await $axios({
       method: 'get',
       url: `${runtimeConfig.public.API_BASE_URL}/admin/tag`,
-      headers: { token },
+      headers,
     });
     if (res.data.success === true) {
       tags.value = res.data.data;
@@ -34,11 +42,13 @@ const getTag = async () => {
   }
 };
 const getCategory = async () => {
+  const headers = getHeadersOrRedirect();
+  if (!headers) return;
   try {
     const res = await $axios({
       method: 'get',
       url: `${runtimeConfig.public.API_BASE_URL}/admin/joincategory`,
-      headers: { token },
+      headers,
     });
     if (res.data.success === true) {
       categories.value = res.data.data;
@@ -63,11 +73,13 @@ onMounted(async () => {
 const data = ref([]);
 
 const getData = async () => {
+  const headers = getHeadersOrRedirect();
+  if (!headers) return;
   try {
     const res = await $axios({
       method: 'get',
       url: `${runtimeConfig.public.API_BASE_URL}/admin/article`,
-      headers: { token },
+      headers,
     });
     if (res.data.success === true) {
       data.value = res.data.data;
@@ -87,11 +99,13 @@ const addArticle = async () => {
   const { default: articleModal } = await import('@/components/modal/articleModal.vue');
   const result = await promptModal(articleModal, { type: 'add', categories: categories.value, tags: tags.value });
   if (result && result.isConfirmed === true) {
+    const headers = getHeadersOrRedirect();
+    if (!headers) return;
     try {
       const res = await $axios({
         method: 'post',
         url: `${runtimeConfig.public.API_BASE_URL}/admin/article`,
-        headers: { token },
+        headers,
         data: result.data
       });
       if (res.data.success === true) {
@@ -113,6 +127,8 @@ const addArticle = async () => {
 
 const editArticle = async (id) => {
   try {
+    const headers = getHeadersOrRedirect();
+    if (!headers) return;
     const { default: articleModal } = await import('@/components/modal/articleModal.vue');
     const slugs = data.value.map(e => {
       return { slug: e.slug, _id: e._id }
@@ -120,7 +136,7 @@ const editArticle = async (id) => {
     const rst = await $axios({
       method: 'post',
       url: `${runtimeConfig.public.API_BASE_URL}/admin/oneArticle`,
-      headers: { token },
+      headers,
       data: { _id: id }
     });
     if (rst.data.success === false) {
@@ -131,7 +147,7 @@ const editArticle = async (id) => {
       const res = await $axios({
         method: 'put',
         url: `${runtimeConfig.public.API_BASE_URL}/admin/article`,
-        headers: { token },
+        headers,
         data: result.data
       });
       if (res.data.success === true) {
@@ -154,11 +170,13 @@ const editArticle = async (id) => {
 const deleteArticle = async (id) => {
   const result = await promptModal(confirmMsg, { msg: '確認刪除' });
   if (result && result.isConfirmed === true) {
+    const headers = getHeadersOrRedirect();
+    if (!headers) return;
     try {
       const res = await $axios({
         method: 'delete',
         url: `${runtimeConfig.public.API_BASE_URL}/admin/article`,
-        headers: { token },
+        headers,
         data: { _id: id }
       });
       if (res.data.success === true) {

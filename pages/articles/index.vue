@@ -4,12 +4,15 @@ const { toLocal } = useTime();
 // const searchOption = ref('');
 
 const article = ref([]);
+const pageError = ref('');
 
 const url = `${runtimeConfig.public.API_BASE_URL}/api/article`;
 const res = await useFetch(url, { method: 'GET' });
 
 if (res.status.value === 'success') {
   article.value = res.data.value.data;
+} else if (res.status.value === 'error') {
+  pageError.value = '文章資料讀取失敗，請稍後再試。';
 }
 
 const search = ref('');
@@ -64,6 +67,10 @@ if (seoRes.status.value === 'success') {
   <section class="p:32">
     <div class="max-w:screen-lg mx:auto">
       <h1 class="fg:primary f:36 f:bold t:center mb:32">{{ h1 }}</h1>
+      <template v-if="pageError">
+        <p class="t:center f:20 fg:red">{{ pageError }}</p>
+      </template>
+      <template v-else>
       <!-- 搜尋 -->
       <!-- <div class="flex jc:space-between ai:center mb:32">
         <div class="flex ai:center">
@@ -140,6 +147,7 @@ if (seoRes.status.value === 'success') {
           </div>
         </div>
       </div>
+      </template>
     </div>
     <!-- pagination -->
   </section>

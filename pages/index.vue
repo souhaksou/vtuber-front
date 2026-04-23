@@ -1,32 +1,43 @@
 <script setup>
 import 'vue3-carousel/dist/carousel.css';
 import { Carousel, Slide } from 'vue3-carousel';
+import { safeJsonParse } from '@/utils/safeJsonParse';
 const { toLocal, live3 } = useTime();
 const { deepCopy } = useCopy();
 const { popular } = useCheck();
+const pageError = ref('');
 
 const livestreamsUrl = 'https://raw.githubusercontent.com/TaiwanVtuberData/TaiwanVTuberTrackingDataJson/master/api/v2/TW/livestreams/all.json';
 const livestreams = ref([]);
 const livestreamsResult = await useFetch(livestreamsUrl, { method: 'GET' });
 if (livestreamsResult.status.value === 'success') {
-  const arr = deepCopy(JSON.parse(livestreamsResult.data.value).livestreams);
+  const parsed = safeJsonParse(livestreamsResult.data.value, {});
+  const arr = deepCopy(Array.isArray(parsed?.livestreams) ? parsed.livestreams : []);
   livestreams.value = live3(arr);
+} else if (livestreamsResult.status.value === 'error') {
+  pageError.value = '首頁資料讀取失敗，請稍後再試。';
 }
 
 const hotUrl = 'https://raw.githubusercontent.com/TaiwanVtuberData/TaiwanVTuberTrackingDataJson/master/api/v2/TW/trending-vtubers/livestream/10.json';
 const hot = ref([]);
 const hotResult = await useFetch(hotUrl, { method: 'GET' });
 if (hotResult.status.value === 'success') {
-  const arr = deepCopy(JSON.parse(hotResult.data.value).VTubers);
+  const parsed = safeJsonParse(hotResult.data.value, {});
+  const arr = deepCopy(Array.isArray(parsed?.VTubers) ? parsed.VTubers : []);
   hot.value = arr;
+} else if (hotResult.status.value === 'error') {
+  pageError.value = '首頁資料讀取失敗，請稍後再試。';
 }
 
 const followUrl = 'https://raw.githubusercontent.com/TaiwanVtuberData/TaiwanVTuberTrackingDataJson/master/api/v2/TW/vtubers/10.json';
 const follow = ref([]);
 const followResult = await useFetch(followUrl, { method: 'GET' });
 if (followResult.status.value === 'success') {
-  const arr = deepCopy(JSON.parse(followResult.data.value).VTubers);
+  const parsed = safeJsonParse(followResult.data.value, {});
+  const arr = deepCopy(Array.isArray(parsed?.VTubers) ? parsed.VTubers : []);
   follow.value = arr;
+} else if (followResult.status.value === 'error') {
+  pageError.value = '首頁資料讀取失敗，請稍後再試。';
 }
 
 const runtimeConfig = useRuntimeConfig();
@@ -42,6 +53,8 @@ if (res.status.value === 'success') {
   article.value = res.data.value.data.article;
   banner.value = res.data.value.data.banner;
   chart.value = res.data.value.data.chart;
+} else if (res.status.value === 'error') {
+  pageError.value = '首頁資料讀取失敗，請稍後再試。';
 }
 
 const gotoArticle = (item) => {
@@ -103,7 +116,10 @@ if (seoRes.status.value === 'success') {
   <!-- banner -->
   <section class="py:64">
     <h1 class="hide">{{ h1 }}</h1>
-    <Carousel v-bind="settings" :breakpoints="breakpoints">
+    <template v-if="pageError">
+      <p class="t:center f:20 fg:red">{{ pageError }}</p>
+    </template>
+    <Carousel v-else v-bind="settings" :breakpoints="breakpoints">
       <Slide v-for="(item, index) in banner" :key="`banner${index}`">
         <div class="carousel__item">
           <img :src="item.bannerUrl" alt="img">

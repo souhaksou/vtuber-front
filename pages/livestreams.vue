@@ -2,9 +2,11 @@
 const runtimeConfig = useRuntimeConfig();
 
 import pagination from '@/components/nav/pagination.vue';
+import { safeJsonParse } from '@/utils/safeJsonParse';
 
 const { toLocal, liveCurrent } = useTime();
 const { deepCopy } = useCopy();
+const pageError = ref('');
 
 const livestreamsUrl = 'https://raw.githubusercontent.com/TaiwanVtuberData/TaiwanVTuberTrackingDataJson/master/api/v2/TW/livestreams/all.json';
 const livestreams = ref([]);
@@ -32,13 +34,16 @@ const paginationShow = (num) => {
 
 const livestreamsResult = await useFetch(livestreamsUrl, { method: 'GET' });
 if (livestreamsResult.status.value === 'success') {
-  livestreams.value = deepCopy(JSON.parse(livestreamsResult.data.value).livestreams);
+  const parsed = safeJsonParse(livestreamsResult.data.value, {});
+  livestreams.value = deepCopy(Array.isArray(parsed?.livestreams) ? parsed.livestreams : []);
   setTimeout(() => {
     if (livestreams.value.length > 0) {
       const index = liveCurrent(livestreams.value) + 1;
       current.value = Math.floor(index / show) + (index % show > 0 ? 1 : 0);
     }
   }, 100);
+} else if (livestreamsResult.status.value === 'error') {
+  pageError.value = '直播資料讀取失敗，請稍後再試。';
 }
 
 const h1 = ref('');
@@ -83,7 +88,10 @@ if (seoRes.status.value === 'success') {
   <section class="p:32">
     <div class="max-w:screen-lg mx:auto">
       <h1 class="fg:primary f:36 f:bold t:center mb:32">{{ h1 }}</h1>
-      <template v-if="livestreams.length > 0">
+      <template v-if="pageError">
+        <p class="t:center f:20 fg:red">{{ pageError }}</p>
+      </template>
+      <template v-else-if="livestreams.length > 0">
         <div class="flex jc:end mb:32">
           <input v-model="search" type="text" class="inline-block w:full max-w:160 p:4|18 r:4 b:1|solid|gray"
             placeholder="篩選名稱">

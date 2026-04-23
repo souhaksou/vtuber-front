@@ -12,16 +12,24 @@ import { parseApiError } from '@/utils/parseApiError';
 const router = useRouter();
 const { $axios } = useNuxtApp();
 const runtimeConfig = useRuntimeConfig();
-const token = localStorage.getItem('token');
+const { getAdminTokenOrRedirect } = useAdminToken();
 
 const data = ref([]);
 
+const getHeadersOrRedirect = () => {
+    const token = getAdminTokenOrRedirect();
+    if (!token) return null;
+    return { token };
+};
+
 const getData = async () => {
+    const headers = getHeadersOrRedirect();
+    if (!headers) return;
     try {
         const res = await $axios({
             method: 'get',
             url: `${runtimeConfig.public.API_BASE_URL}/admin/account`,
-            headers: { token },
+            headers,
         });
         if (res.data.success === true) {
             data.value = res.data.data;
@@ -40,11 +48,13 @@ const getData = async () => {
 const editAccount = async (item) => {
     const result = await promptModal(accountModal, { item });
     if (result && result.isConfirmed === true) {
+        const headers = getHeadersOrRedirect();
+        if (!headers) return;
         try {
             const res = await $axios({
                 method: 'put',
                 url: `${runtimeConfig.public.API_BASE_URL}/admin/account`,
-                headers: { token },
+                headers,
                 data: result.data
             });
             if (res.data.success === true) {

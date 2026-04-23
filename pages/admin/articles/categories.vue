@@ -10,16 +10,24 @@ import { parseApiError } from '@/utils/parseApiError';
 const router = useRouter();
 const { $axios } = useNuxtApp();
 const runtimeConfig = useRuntimeConfig();
-const token = localStorage.getItem('token');
+const { getAdminTokenOrRedirect } = useAdminToken();
 
 const data = ref([]);
 
+const getHeadersOrRedirect = () => {
+  const token = getAdminTokenOrRedirect();
+  if (!token) return null;
+  return { token };
+};
+
 const getData = async () => {
+  const headers = getHeadersOrRedirect();
+  if (!headers) return;
   try {
     const res = await $axios({
       method: 'get',
       url: `${runtimeConfig.public.API_BASE_URL}/admin/joincategory`,
-      headers: { token },
+      headers,
     });
     if (res.data.success === true) {
       data.value = res.data.data;
@@ -38,11 +46,13 @@ const getData = async () => {
 const addCategory = async () => {
   const result = await promptModal(categoryModal, { type: 'add', item: data.value });
   if (result && result.isConfirmed === true) {
+    const headers = getHeadersOrRedirect();
+    if (!headers) return;
     try {
       const res = await $axios({
         method: 'post',
         url: `${runtimeConfig.public.API_BASE_URL}/admin/category`,
-        headers: { token },
+        headers,
         data: result.data
       });
       if (res.data.success === true) {
@@ -65,11 +75,13 @@ const addCategory = async () => {
 const editCategory = async (index) => {
   const result = await promptModal(categoryModal, { type: 'edit', index: index, item: data.value });
   if (result && result.isConfirmed === true) {
+    const headers = getHeadersOrRedirect();
+    if (!headers) return;
     try {
       const res = await $axios({
         method: 'put',
         url: `${runtimeConfig.public.API_BASE_URL}/admin/category`,
-        headers: { token },
+        headers,
         data: result.data
       });
       if (res.data.success === true) {
@@ -92,11 +104,13 @@ const editCategory = async (index) => {
 const deleteCategory = async (item) => {
   const result = await promptModal(confirmMsg, { msg: '確認刪除' });
   if (result && result.isConfirmed === true) {
+    const headers = getHeadersOrRedirect();
+    if (!headers) return;
     try {
       const res = await $axios({
         method: 'delete',
         url: `${runtimeConfig.public.API_BASE_URL}/admin/category`,
-        headers: { token },
+        headers,
         data: { _id: item._id }
       });
       if (res.data.success === true) {
@@ -119,11 +133,13 @@ const deleteCategory = async (item) => {
 const addSubcategory = async (item) => {
   const result = await promptModal(subcategoryModal, { type: 'add', item: item });
   if (result && result.isConfirmed === true) {
+    const headers = getHeadersOrRedirect();
+    if (!headers) return;
     try {
       const res = await $axios({
         method: 'post',
         url: `${runtimeConfig.public.API_BASE_URL}/admin/subcategory`,
-        headers: { token },
+        headers,
         data: result.data
       });
       if (res.data.success === true) {
@@ -146,11 +162,13 @@ const addSubcategory = async (item) => {
 const editSubcategory = async (item, ii) => {
   const result = await promptModal(subcategoryModal, { type: 'edit', index: ii, item: item });
   if (result && result.isConfirmed === true) {
+    const headers = getHeadersOrRedirect();
+    if (!headers) return;
     try {
       const res = await $axios({
         method: 'put',
         url: `${runtimeConfig.public.API_BASE_URL}/admin/subcategory`,
-        headers: { token },
+        headers,
         data: result.data
       });
       if (res.data.success === true) {
@@ -173,11 +191,13 @@ const editSubcategory = async (item, ii) => {
 const deleteSubcategory = async (item) => {
   const result = await promptModal(confirmMsg, { msg: '確認刪除' });
   if (result && result.isConfirmed === true) {
+    const headers = getHeadersOrRedirect();
+    if (!headers) return;
     try {
       const res = await $axios({
         method: 'delete',
         url: `${runtimeConfig.public.API_BASE_URL}/admin/subcategory`,
-        headers: { token },
+        headers,
         data: { _id: item._id }
       });
       if (res.data.success === true) {

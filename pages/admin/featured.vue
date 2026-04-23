@@ -11,10 +11,16 @@ import { sanitizeHtml } from '@/utils/sanitizeHtml';
 const router = useRouter();
 const { $axios } = useNuxtApp();
 const runtimeConfig = useRuntimeConfig();
-const token = localStorage.getItem('token');
+const { getAdminTokenOrRedirect } = useAdminToken();
 
 const data = ref([]);
 const container = ref(null);
+const getHeadersOrRedirect = () => {
+  const token = getAdminTokenOrRedirect();
+  if (!token) return null;
+  return { token };
+};
+
 const sanitizedData = computed(() =>
   data.value.map(item => ({
     ...item,
@@ -23,19 +29,16 @@ const sanitizedData = computed(() =>
 );
 
 const getData = async () => {
+  const headers = getHeadersOrRedirect();
+  if (!headers) return;
   try {
     const res = await $axios({
       method: 'get',
       url: `${runtimeConfig.public.API_BASE_URL}/admin/featured`,
-      headers: { token },
+      headers,
     });
     if (res.data.success === true) {
       data.value = res.data.data;
-      nextTick(() => {
-        if (container.value?.length) {
-          changeCss(container.value[0]);
-        }
-      });
     }
   } catch (error) {
     console.error(error);
@@ -52,11 +55,13 @@ const editFeatured = async (item) => {
   const { default: featuredModal } = await import('@/components/modal/featuredModal.vue');
   const result = await promptModal(featuredModal, { type: 'edit', item: item });
   if (result && result.isConfirmed === true) {
+    const headers = getHeadersOrRedirect();
+    if (!headers) return;
     try {
       const res = await $axios({
         method: 'put',
         url: `${runtimeConfig.public.API_BASE_URL}/admin/featured`,
-        headers: { token },
+        headers,
         data: result.data
       });
       if (res.data.success === true) {
@@ -77,11 +82,20 @@ const editFeatured = async (item) => {
 };
 
 const changeCss = (textContainer) => {
+  if (!textContainer) return;
   textContainer.classList.add(`lh:2.0`);
   textContainer.classList.add(`{my:16;}>h2`);
   textContainer.classList.add(`{content:'\u2022';fg:#333;mr:4;}>ul>li::before`);
   textContainer.classList.add(`{fg:#333;ml:16;pl:6;}>ol>li`);
 };
+
+watch(data, async (val) => {
+  if (!val?.length) return;
+  await nextTick();
+  if (container.value?.length) {
+    changeCss(container.value[0]);
+  }
+});
 
 onMounted(async () => {
   await getData();
