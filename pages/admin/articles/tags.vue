@@ -4,14 +4,12 @@ import { openModal, promptModal } from 'jenesius-vue-modal';
 import tagModal from '@/components/modal/tagModal.vue';
 import confirmMsg from '@/components/modal/confirmMsg.vue';
 import okMsg from '@/components/modal/okMsg.vue';
-import errorMsg from '@/components/modal/errorMsg.vue';
 import { parseApiError } from '@/utils/parseApiError';
 
 const router = useRouter();
 const { $axios } = useNuxtApp();
 const runtimeConfig = useRuntimeConfig();
 const token = localStorage.getItem('token');
-const { deepCopy } = useCopy();
 
 const data = ref([]);
 

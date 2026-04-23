@@ -21,7 +21,7 @@ const props = defineProps({
 
 const current = ref(props.current);
 
-watch(current, (newValue, oldValue) => {
+watch(current, (newValue) => {
   emits('current', newValue);
 })
 

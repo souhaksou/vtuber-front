@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-export default defineNuxtRouteMiddleware((to, from) => {
+export default defineNuxtRouteMiddleware((to) => {
   if (process.client) {
     const token = localStorage.getItem('token');
     const expirationDate = localStorage.getItem('expirationDate');

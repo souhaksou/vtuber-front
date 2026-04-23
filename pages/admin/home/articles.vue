@@ -4,7 +4,6 @@ import { openModal, promptModal } from 'jenesius-vue-modal';
 import activeArticleModal from '@/components/modal/activeArticleModal';
 import confirmMsg from '@/components/modal/confirmMsg.vue';
 import okMsg from '@/components/modal/okMsg.vue';
-import errorMsg from '@/components/modal/errorMsg.vue';
 import { parseApiError } from '@/utils/parseApiError';
 
 const router = useRouter();

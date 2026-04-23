@@ -16,7 +16,7 @@ todos:
     status: completed
   - id: add-quality-gates
     content: 在 `package.json` 加入 `lint/typecheck/test` scripts，並新增最小 CI workflow
-    status: pending
+    status: completed
   - id: fix-pagination-typo
     content: 修正 `components/nav/pagination.vue` 的 `defaulut` typo 並確認 pagination 顯示數值邏輯
     status: completed

@@ -1,7 +1,6 @@
 <script setup>
 import 'vue3-carousel/dist/carousel.css';
 import { Carousel, Slide } from 'vue3-carousel';
-const { getImgUrl } = useAssets();
 const { toLocal, live3 } = useTime();
 const { deepCopy } = useCopy();
 const { popular } = useCheck();

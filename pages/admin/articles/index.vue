@@ -1,10 +1,8 @@
 <script setup>
 
 import { openModal, promptModal } from 'jenesius-vue-modal';
-import articleModal from '@/components/modal/articleModal.vue';
 import confirmMsg from '@/components/modal/confirmMsg.vue';
 import okMsg from '@/components/modal/okMsg.vue';
-import errorMsg from '@/components/modal/errorMsg.vue';
 import { parseApiError } from '@/utils/parseApiError';
 
 const router = useRouter();
@@ -86,6 +84,7 @@ const getData = async () => {
 };
 
 const addArticle = async () => {
+  const { default: articleModal } = await import('@/components/modal/articleModal.vue');
   const result = await promptModal(articleModal, { type: 'add', categories: categories.value, tags: tags.value });
   if (result && result.isConfirmed === true) {
     try {
@@ -114,6 +113,7 @@ const addArticle = async () => {
 
 const editArticle = async (id) => {
   try {
+    const { default: articleModal } = await import('@/components/modal/articleModal.vue');
     const slugs = data.value.map(e => {
       return { slug: e.slug, _id: e._id }
     });

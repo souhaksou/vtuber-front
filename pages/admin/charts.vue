@@ -7,7 +7,6 @@ import { openModal, promptModal } from 'jenesius-vue-modal';
 import chartModal from '@/components/modal/chartModal.vue';
 import confirmMsg from '@/components/modal/confirmMsg.vue';
 import okMsg from '@/components/modal/okMsg.vue';
-import errorMsg from '@/components/modal/errorMsg.vue';
 import { parseApiError } from '@/utils/parseApiError';
 
 const router = useRouter();

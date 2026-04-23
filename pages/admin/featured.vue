@@ -4,10 +4,7 @@ definePageMeta({
 })
 
 import { openModal, promptModal } from 'jenesius-vue-modal';
-import featuredModal from '@/components/modal/featuredModal.vue';
-import confirmMsg from '@/components/modal/confirmMsg.vue';
 import okMsg from '@/components/modal/okMsg.vue';
-import errorMsg from '@/components/modal/errorMsg.vue';
 import { parseApiError } from '@/utils/parseApiError';
 import { sanitizeHtml } from '@/utils/sanitizeHtml';
 
@@ -50,6 +47,7 @@ const getData = async () => {
 };
 
 const editFeatured = async (item) => {
+  const { default: featuredModal } = await import('@/components/modal/featuredModal.vue');
   const result = await promptModal(featuredModal, { type: 'edit', item: item });
   if (result && result.isConfirmed === true) {
     try {

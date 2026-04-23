@@ -42,7 +42,7 @@ const finished = ref(false);
 
 const category = ref(null);
 const subcategory = ref(null);
-watch(category, (newValue, oldValue) => {
+watch(category, () => {
     subcategory.value = category.value.subcategories;
     subcategoryId.value = '';
 });
@@ -167,16 +167,16 @@ const confirm = async () => {
             <div class="w:16"></div>
             <select class="p:4|16 r:4 b:1|solid|gray" v-model="category">
                 <option value="" disabled>請選擇</option>
-                <option :key="item.name" v-for="item in props.categories" :value="item">
-                    {{ `${item.name}（${item.show}）` }}</option>
+                <option :key="categoryItem.name" v-for="categoryItem in props.categories" :value="categoryItem">
+                    {{ `${categoryItem.name}（${categoryItem.show}）` }}</option>
             </select>
             <div class="w:32"></div>
             <p>子分類</p>
             <div class="w:16"></div>
             <select class="p:4|16 r:4 b:1|solid|gray" v-model="subcategoryId">
                 <option value="" disabled>請選擇</option>
-                <option :key="item.name" v-for="item in subcategory" :value="item._id">
-                    {{ `${item.name}（${item.show}）` }}</option>
+                <option :key="subcategoryItem.name" v-for="subcategoryItem in subcategory" :value="subcategoryItem._id">
+                    {{ `${subcategoryItem.name}（${subcategoryItem.show}）` }}</option>
             </select>
         </div>
         <div class="flex ai:center mb:8">
@@ -185,14 +185,14 @@ const confirm = async () => {
             <input type="text" list="tagList" class="block w:full max-w:100 p:4|8 r:4 b:1|solid|gray" v-model="tagAdd">
             <datalist id="tagList">
                 <option value="" disabled>請選擇</option>
-                <option :key="item.name" v-for="item in props.tags" :value="item.name"></option>
+                <option :key="tagItem.name" v-for="tagItem in props.tags" :value="tagItem.name"></option>
             </datalist>
             <div class="w:16"></div>
             <a @click="addTag(tagAdd)" class="inline-block f:14 px:4 r:4 fg:white bg:green "><i
                     class="bi bi-plus"></i></a>
         </div>
         <div class="mb:16 p:8 r:4 bg:secondary flex">
-            <template v-for="(item, key) in tagObj" :key="key">
+            <template v-for="(tagId, key) in tagObj" :key="key">
                 <p class="inline-block p:4|8 r:4 bg:white m:8"><span class="fg:gray mr:8">{{ key }}</span>
                     <a @click="deleteTag(key)" class="inline-block f:14 px:4 r:4 fg:white bg:red"><i
                             class="bi bi-x"></i></a>

@@ -2,7 +2,7 @@
 import { sanitizeHtml } from '@/utils/sanitizeHtml';
 
 const route = useRoute();
-const { category, subcategory, slug } = route.params;
+const { slug } = route.params;
 const { toLocal } = useTime();
 const runtimeConfig = useRuntimeConfig();
 
