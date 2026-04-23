@@ -11,7 +11,7 @@ const props = defineProps({
   },
   length: {
     type: Number,
-    defaulut: () => 0
+    default: () => 0
   },
   show: {
     type: Number,
@@ -26,6 +26,17 @@ watch(current, (newValue, oldValue) => {
 })
 
 const emits = defineEmits(['current']);
+
+const displayRangeText = computed(() => {
+  if (props.length <= 0 || props.show <= 0) {
+    return '0 - 0';
+  }
+
+  const start = (current.value - 1) * props.show + 1;
+  const end = Math.min(current.value * props.show, props.length);
+
+  return `${start} - ${end}`;
+});
 
 const goto = (key) => {
   switch (key) {
@@ -68,7 +79,7 @@ const goto = (key) => {
       <a @click="goto(2)"><i class="bi bi-chevron-bar-right"></i></a>
     </div>
     <div class="flex jc:end ai:center f:14">
-      <p>顯示第 {{ `${1 + (current - 1) * show} - ${current * show}` }} 筆資料</p>
+      <p>顯示第 {{ displayRangeText }} 筆資料</p>
       <div class="w:16"></div>
       <p>共 {{ length }} 筆</p>
     </div>

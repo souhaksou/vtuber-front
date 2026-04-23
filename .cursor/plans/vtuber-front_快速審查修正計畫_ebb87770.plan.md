@@ -19,7 +19,7 @@ todos:
     status: pending
   - id: fix-pagination-typo
     content: 修正 `components/nav/pagination.vue` 的 `defaulut` typo 並確認 pagination 顯示數值邏輯
-    status: pending
+    status: completed
 isProject: false
 ---
 
