@@ -13,7 +13,7 @@ todos:
     status: completed
   - id: secure-blank-links
     content: 補齊所有 `target="_blank"` 的 `rel="noopener noreferrer"`
-    status: pending
+    status: completed
   - id: add-quality-gates
     content: 在 `package.json` 加入 `lint/typecheck/test` scripts，並新增最小 CI workflow
     status: pending

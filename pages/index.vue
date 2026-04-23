@@ -161,10 +161,10 @@ if (seoRes.status.value === 'success') {
                   </div>
                 </td>
                 <td>{{ (item.YouTube !== undefined ? item.YouTube.popularity : 0) + (item.Twitch !== undefined ?
-      item.Twitch.popularity : 0) }}</td>
+                  item.Twitch.popularity : 0) }}</td>
                 <td>
-                  <a :href="popular(item.popularVideo)" target="_blank" class="f:20 fg:primary inline-block px:8"><i
-                      class="bi bi-play-btn-fill"></i></a>
+                  <a :href="popular(item.popularVideo)" target="_blank" rel="noopener noreferrer"
+                    class="f:20 fg:primary inline-block px:8"><i class="bi bi-play-btn-fill"></i></a>
                 </td>
               </tr>
             </table>
@@ -185,10 +185,10 @@ if (seoRes.status.value === 'success') {
                   </div>
                 </td>
                 <td>{{ (item.YouTube !== undefined ? item.YouTube.subscriber.count : 0) + (item.Twitch !== undefined ?
-      item.Twitch.follower.count : 0) }}</td>
+                  item.Twitch.follower.count : 0) }}</td>
                 <td>
-                  <a :href="popular(item.popularVideo)" target="_blank" class="f:20 fg:primary inline-block px:8"><i
-                      class="bi bi-play-btn-fill"></i></a>
+                  <a :href="popular(item.popularVideo)" target="_blank" rel="noopener noreferrer"
+                    class="f:20 fg:primary inline-block px:8"><i class="bi bi-play-btn-fill"></i></a>
                 </td>
               </tr>
             </table>
@@ -220,8 +220,8 @@ if (seoRes.status.value === 'success') {
                   </td>
                   <td>{{ toLocal(item.startTime) }}</td>
                   <td>
-                    <a :href="item.videoUrl" target="_blank" class="f:20 fg:primary inline-block px:8"><i
-                        class="bi bi-play-btn-fill"></i></a>
+                    <a :href="item.videoUrl" target="_blank" rel="noopener noreferrer"
+                      class="f:20 fg:primary inline-block px:8"><i class="bi bi-play-btn-fill"></i></a>
                   </td>
                 </tr>
               </table>
@@ -250,6 +250,7 @@ if (seoRes.status.value === 'success') {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
+  line-clamp: 3;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }

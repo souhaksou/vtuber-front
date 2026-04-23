@@ -159,7 +159,7 @@ onMounted(async () => {
                                 <!-- <iframe :src="item.chartUrl" allowfullscreen
                                     :class="`aspect:${item.width}/${item.height}`"
                                     class="w:full max-w:300 mx:auto"></iframe> -->
-                                <a :href="item.chartUrl" target="_blank" class="fg:link">{{ item.chartUrl }}</a>
+                                <a :href="item.chartUrl" target="_blank" rel="noopener noreferrer" class="fg:link">{{ item.chartUrl }}</a>
                             </td>
                             <td>{{ `${item.width} | ${item.height}` }}</td>
                             <td>{{ item.max }}</td>

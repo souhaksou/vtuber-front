@@ -108,7 +108,7 @@ if (seoRes.status.value === 'success') {
                 <td>{{ toLocal(item.startTime) }}</td>
                 <td class="t:left">{{ item.title }}</td>
                 <td>
-                  <a :href="item.videoUrl" target="_blank" class="f:20 fg:primary inline-block px:8"><i
+                  <a :href="item.videoUrl" target="_blank" rel="noopener noreferrer" class="f:20 fg:primary inline-block px:8"><i
                       class="bi bi-play-btn-fill"></i></a>
                 </td>
               </tr>

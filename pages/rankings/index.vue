@@ -102,7 +102,7 @@ if (seoRes.status.value === 'success') {
                 <td>{{ item.YouTube !== undefined ? item.YouTube.popularity : '' }}</td>
                 <td>{{ item.Twitch !== undefined ? item.Twitch.popularity : '' }}</td>
                 <td>
-                  <a :href="popular(item.popularVideo)" target="_blank" class="f:20 fg:primary inline-block px:8"><i
+                  <a :href="popular(item.popularVideo)" target="_blank" rel="noopener noreferrer" class="f:20 fg:primary inline-block px:8"><i
                       class="bi bi-play-btn-fill"></i></a>
                 </td>
               </tr>

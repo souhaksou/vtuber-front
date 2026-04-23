@@ -103,7 +103,7 @@ if (seoRes.status.value === 'success') {
                 <td>{{ checkFollow(item, 'Twitch') }}</td>
                 <td>
                   <template v-if="item.popularVideo">
-                    <a :href="popular(item.popularVideo)" target="_blank" class="f:20 fg:primary inline-block px:8"><i
+                    <a :href="popular(item.popularVideo)" target="_blank" rel="noopener noreferrer" class="f:20 fg:primary inline-block px:8"><i
                         class="bi bi-play-btn-fill"></i></a>
                   </template>
                 </td>

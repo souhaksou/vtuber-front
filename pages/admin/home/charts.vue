@@ -94,7 +94,7 @@ onMounted(async () => {
                 </div>
               </td>
               <td>{{ item.name }}</td>
-              <td><a :href="item.chartUrl" target="_blank" class="fg:link">{{ item.chartUrl }}</a></td>
+              <td><a :href="item.chartUrl" target="_blank" rel="noopener noreferrer" class="fg:link">{{ item.chartUrl }}</a></td>
             </tr>
           </template>
         </table>
