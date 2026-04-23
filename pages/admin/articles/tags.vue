@@ -5,6 +5,7 @@ import tagModal from '@/components/modal/tagModal.vue';
 import confirmMsg from '@/components/modal/confirmMsg.vue';
 import okMsg from '@/components/modal/okMsg.vue';
 import errorMsg from '@/components/modal/errorMsg.vue';
+import { parseApiError } from '@/utils/parseApiError';
 
 const router = useRouter();
 const { $axios } = useNuxtApp();
@@ -26,13 +27,11 @@ const getData = async () => {
     }
   } catch (error) {
     console.error(error);
-    if (error.response.data.success === false) {
-      const message = error.response.data.message;
-      if (message === 'TokenExpiredError') {
-        localStorage.removeItem('token');
-        localStorage.removeItem('expirationDate');
-        router.push('/login');
-      }
+    const parsedError = parseApiError(error);
+    if (parsedError.isTokenExpired) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('expirationDate');
+      router.push('/login');
     }
   }
 };
@@ -54,13 +53,11 @@ const addTag = async () => {
       }
     } catch (error) {
       console.error(error);
-      if (error.response.data.success === false) {
-        const message = error.response.data.message;
-        if (message === 'TokenExpiredError') {
-          localStorage.removeItem('token');
-          localStorage.removeItem('expirationDate');
-          router.push('/login');
-        }
+      const parsedError = parseApiError(error);
+      if (parsedError.isTokenExpired) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('expirationDate');
+        router.push('/login');
       }
     }
   }
@@ -83,13 +80,11 @@ const editTag = async (index) => {
       }
     } catch (error) {
       console.error(error);
-      if (error.response.data.success === false) {
-        const message = error.response.data.message;
-        if (message === 'TokenExpiredError') {
-          localStorage.removeItem('token');
-          localStorage.removeItem('expirationDate');
-          router.push('/login');
-        }
+      const parsedError = parseApiError(error);
+      if (parsedError.isTokenExpired) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('expirationDate');
+        router.push('/login');
       }
     }
   }
@@ -112,13 +107,11 @@ const deleteTag = async (item) => {
       }
     } catch (error) {
       console.error(error);
-      if (error.response.data.success === false) {
-        const message = error.response.data.message;
-        if (message === 'TokenExpiredError') {
-          localStorage.removeItem('token');
-          localStorage.removeItem('expirationDate');
-          router.push('/login');
-        }
+      const parsedError = parseApiError(error);
+      if (parsedError.isTokenExpired) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('expirationDate');
+        router.push('/login');
       }
     }
   }

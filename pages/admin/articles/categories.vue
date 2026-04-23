@@ -6,6 +6,7 @@ import subcategoryModal from '@/components/modal/subcategoryModal.vue';
 import confirmMsg from '@/components/modal/confirmMsg.vue';
 import okMsg from '@/components/modal/okMsg.vue';
 import errorMsg from '@/components/modal/errorMsg.vue';
+import { parseApiError } from '@/utils/parseApiError';
 
 const router = useRouter();
 const { $axios } = useNuxtApp();
@@ -27,13 +28,11 @@ const getData = async () => {
     }
   } catch (error) {
     console.error(error);
-    if (error.response.data.success === false) {
-      const message = error.response.data.message;
-      if (message === 'TokenExpiredError') {
-        localStorage.removeItem('token');
-        localStorage.removeItem('expirationDate');
-        router.push('/login');
-      }
+    const parsedError = parseApiError(error);
+    if (parsedError.isTokenExpired) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('expirationDate');
+      router.push('/login');
     }
   }
 };
@@ -55,13 +54,11 @@ const addCategory = async () => {
       }
     } catch (error) {
       console.error(error);
-      if (error.response.data.success === false) {
-        const message = error.response.data.message;
-        if (message === 'TokenExpiredError') {
-          localStorage.removeItem('token');
-          localStorage.removeItem('expirationDate');
-          router.push('/login');
-        }
+      const parsedError = parseApiError(error);
+      if (parsedError.isTokenExpired) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('expirationDate');
+        router.push('/login');
       }
     }
   }
@@ -84,13 +81,11 @@ const editCategory = async (index) => {
       }
     } catch (error) {
       console.error(error);
-      if (error.response.data.success === false) {
-        const message = error.response.data.message;
-        if (message === 'TokenExpiredError') {
-          localStorage.removeItem('token');
-          localStorage.removeItem('expirationDate');
-          router.push('/login');
-        }
+      const parsedError = parseApiError(error);
+      if (parsedError.isTokenExpired) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('expirationDate');
+        router.push('/login');
       }
     }
   }
@@ -113,13 +108,11 @@ const deleteCategory = async (item) => {
       }
     } catch (error) {
       console.error(error);
-      if (error.response.data.success === false) {
-        const message = error.response.data.message;
-        if (message === 'TokenExpiredError') {
-          localStorage.removeItem('token');
-          localStorage.removeItem('expirationDate');
-          router.push('/login');
-        }
+      const parsedError = parseApiError(error);
+      if (parsedError.isTokenExpired) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('expirationDate');
+        router.push('/login');
       }
     }
   }
@@ -142,13 +135,11 @@ const addSubcategory = async (item) => {
       }
     } catch (error) {
       console.error(error);
-      if (error.response.data.success === false) {
-        const message = error.response.data.message;
-        if (message === 'TokenExpiredError') {
-          localStorage.removeItem('token');
-          localStorage.removeItem('expirationDate');
-          router.push('/login');
-        }
+      const parsedError = parseApiError(error);
+      if (parsedError.isTokenExpired) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('expirationDate');
+        router.push('/login');
       }
     }
   }
@@ -171,13 +162,11 @@ const editSubcategory = async (item, ii) => {
       }
     } catch (error) {
       console.error(error);
-      if (error.response.data.success === false) {
-        const message = error.response.data.message;
-        if (message === 'TokenExpiredError') {
-          localStorage.removeItem('token');
-          localStorage.removeItem('expirationDate');
-          router.push('/login');
-        }
+      const parsedError = parseApiError(error);
+      if (parsedError.isTokenExpired) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('expirationDate');
+        router.push('/login');
       }
     }
   }
@@ -200,13 +189,11 @@ const deleteSubcategory = async (item) => {
       }
     } catch (error) {
       console.error(error);
-      if (error.response.data.success === false) {
-        const message = error.response.data.message;
-        if (message === 'TokenExpiredError') {
-          localStorage.removeItem('token');
-          localStorage.removeItem('expirationDate');
-          router.push('/login');
-        }
+      const parsedError = parseApiError(error);
+      if (parsedError.isTokenExpired) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('expirationDate');
+        router.push('/login');
       }
     }
   }

@@ -7,7 +7,7 @@ todos:
     status: pending
   - id: harden-axios-errors
     content: 抽出統一錯誤解析 helper/interceptor，替換 `error.response.data` 直取模式
-    status: pending
+    status: completed
   - id: remove-full-reload
     content: 把 admin 的 `window.location.reload(true)` 改為局部狀態更新或重抓單一資料源
     status: completed

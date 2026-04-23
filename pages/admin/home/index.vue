@@ -5,6 +5,7 @@ import bannerModal from '@/components/modal/bannerModal.vue';
 import confirmMsg from '@/components/modal/confirmMsg.vue';
 import okMsg from '@/components/modal/okMsg.vue';
 import errorMsg from '@/components/modal/errorMsg.vue';
+import { parseApiError } from '@/utils/parseApiError';
 
 const router = useRouter();
 const { $axios } = useNuxtApp();
@@ -25,13 +26,11 @@ const getData = async () => {
     }
   } catch (error) {
     console.error(error);
-    if (error.response.data.success === false) {
-      const message = error.response.data.message;
-      if (message === 'TokenExpiredError') {
-        localStorage.removeItem('token');
-        localStorage.removeItem('expirationDate');
-        router.push('/login');
-      }
+    const parsedError = parseApiError(error);
+    if (parsedError.isTokenExpired) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('expirationDate');
+      router.push('/login');
     }
   }
 };
@@ -53,13 +52,11 @@ const addBanner = async () => {
       }
     } catch (error) {
       console.error(error);
-      if (error.response.data.success === false) {
-        const message = error.response.data.message;
-        if (message === 'TokenExpiredError') {
-          localStorage.removeItem('token');
-          localStorage.removeItem('expirationDate');
-          router.push('/login');
-        }
+      const parsedError = parseApiError(error);
+      if (parsedError.isTokenExpired) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('expirationDate');
+        router.push('/login');
       }
     }
   }
@@ -82,13 +79,11 @@ const editBanner = async (item) => {
       }
     } catch (error) {
       console.error(error);
-      if (error.response.data.success === false) {
-        const message = error.response.data.message;
-        if (message === 'TokenExpiredError') {
-          localStorage.removeItem('token');
-          localStorage.removeItem('expirationDate');
-          router.push('/login');
-        }
+      const parsedError = parseApiError(error);
+      if (parsedError.isTokenExpired) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('expirationDate');
+        router.push('/login');
       }
     }
   }
@@ -111,13 +106,11 @@ const deleteBanner = async (item) => {
       }
     } catch (error) {
       console.error(error);
-      if (error.response.data.success === false) {
-        const message = error.response.data.message;
-        if (message === 'TokenExpiredError') {
-          localStorage.removeItem('token');
-          localStorage.removeItem('expirationDate');
-          router.push('/login');
-        }
+      const parsedError = parseApiError(error);
+      if (parsedError.isTokenExpired) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('expirationDate');
+        router.push('/login');
       }
     }
   }

@@ -7,6 +7,7 @@ import { openModal } from "jenesius-vue-modal";
 import textMsg from '@/components/modal/textMsg.vue';
 import errorMsg from '@/components/modal/errorMsg.vue';
 import VueClientRecaptcha from 'vue-client-recaptcha';
+import { parseApiError } from '@/utils/parseApiError';
 
 const router = useRouter();
 
@@ -56,10 +57,8 @@ const submit = async () => {
         }
     } catch (error) {
         console.error(error);
-        if (error.response.data.success === false) {
-            const message = error.response.data.message;
-            await openModal(errorMsg, { msg: message });
-        }
+        const parsedError = parseApiError(error);
+        await openModal(errorMsg, { msg: parsedError.message });
     }
 };
 

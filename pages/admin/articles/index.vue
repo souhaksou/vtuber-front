@@ -5,6 +5,7 @@ import articleModal from '@/components/modal/articleModal.vue';
 import confirmMsg from '@/components/modal/confirmMsg.vue';
 import okMsg from '@/components/modal/okMsg.vue';
 import errorMsg from '@/components/modal/errorMsg.vue';
+import { parseApiError } from '@/utils/parseApiError';
 
 const router = useRouter();
 const { $axios } = useNuxtApp();
@@ -26,13 +27,11 @@ const getTag = async () => {
     }
   } catch (error) {
     console.error(error);
-    if (error.response.data.success === false) {
-      const message = error.response.data.message;
-      if (message === 'TokenExpiredError') {
-        localStorage.removeItem('token');
-        localStorage.removeItem('expirationDate');
-        router.push('/login');
-      }
+    const parsedError = parseApiError(error);
+    if (parsedError.isTokenExpired) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('expirationDate');
+      router.push('/login');
     }
   }
 };
@@ -48,13 +47,11 @@ const getCategory = async () => {
     }
   } catch (error) {
     console.error(error);
-    if (error.response.data.success === false) {
-      const message = error.response.data.message;
-      if (message === 'TokenExpiredError') {
-        localStorage.removeItem('token');
-        localStorage.removeItem('expirationDate');
-        router.push('/login');
-      }
+    const parsedError = parseApiError(error);
+    if (parsedError.isTokenExpired) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('expirationDate');
+      router.push('/login');
     }
   }
 };
@@ -79,13 +76,11 @@ const getData = async () => {
     }
   } catch (error) {
     console.error(error);
-    if (error.response.data.success === false) {
-      const message = error.response.data.message;
-      if (message === 'TokenExpiredError') {
-        localStorage.removeItem('token');
-        localStorage.removeItem('expirationDate');
-        router.push('/login');
-      }
+    const parsedError = parseApiError(error);
+    if (parsedError.isTokenExpired) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('expirationDate');
+      router.push('/login');
     }
   }
 };
@@ -107,13 +102,11 @@ const addArticle = async () => {
       }
     } catch (error) {
       console.error(error);
-      if (error.response.data.success === false) {
-        const message = error.response.data.message;
-        if (message === 'TokenExpiredError') {
-          localStorage.removeItem('token');
-          localStorage.removeItem('expirationDate');
-          router.push('/login');
-        }
+      const parsedError = parseApiError(error);
+      if (parsedError.isTokenExpired) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('expirationDate');
+        router.push('/login');
       }
     }
   }
@@ -149,13 +142,11 @@ const editArticle = async (id) => {
     }
   } catch (error) {
     console.error(error);
-    if (error.response.data.success === false) {
-      const message = error.response.data.message;
-      if (message === 'TokenExpiredError') {
-        localStorage.removeItem('token');
-        localStorage.removeItem('expirationDate');
-        router.push('/login');
-      }
+    const parsedError = parseApiError(error);
+    if (parsedError.isTokenExpired) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('expirationDate');
+      router.push('/login');
     }
   }
 };
@@ -177,13 +168,11 @@ const deleteArticle = async (id) => {
       }
     } catch (error) {
       console.error(error);
-      if (error.response.data.success === false) {
-        const message = error.response.data.message;
-        if (message === 'TokenExpiredError') {
-          localStorage.removeItem('token');
-          localStorage.removeItem('expirationDate');
-          router.push('/login');
-        }
+      const parsedError = parseApiError(error);
+      if (parsedError.isTokenExpired) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('expirationDate');
+        router.push('/login');
       }
     }
   }
