@@ -1,4 +1,6 @@
 <script setup>
+import { sanitizeHtml } from '@/utils/sanitizeHtml';
+
 const runtimeConfig = useRuntimeConfig();
 
 const data = ref([]);
@@ -9,6 +11,13 @@ const res = await useFetch(url, { method: 'GET' });
 if (res.status.value === 'success') {
   data.value = res.data.value.data;
 }
+
+const sanitizedData = computed(() =>
+  data.value.map(item => ({
+    ...item,
+    safeText: sanitizeHtml(item.text || '')
+  }))
+);
 
 const changeCss = (textContainer) => {
   textContainer.classList.add(`lh:2.0`);
@@ -64,8 +73,8 @@ if (seoRes.status.value === 'success') {
       <h1 class="fg:primary f:36 f:bold t:center mb:32">{{ h1 }}</h1>
       <!-- 資料 -->
       <template v-if="data.length > 0">
-        <div v-for="(item, index) in data" :key="`text${index}`">
-          <div ref="container" class="bg:secondary p:16 p:32@xs" v-html="item.text"></div>
+        <div v-for="(item, index) in sanitizedData" :key="`text${index}`">
+          <div ref="container" class="bg:secondary p:16 p:32@xs" v-html="item.safeText"></div>
         </div>
       </template>
     </div>

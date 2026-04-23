@@ -9,6 +9,7 @@ import confirmMsg from '@/components/modal/confirmMsg.vue';
 import okMsg from '@/components/modal/okMsg.vue';
 import errorMsg from '@/components/modal/errorMsg.vue';
 import { parseApiError } from '@/utils/parseApiError';
+import { sanitizeHtml } from '@/utils/sanitizeHtml';
 
 const router = useRouter();
 const { $axios } = useNuxtApp();
@@ -17,6 +18,12 @@ const token = localStorage.getItem('token');
 
 const data = ref([]);
 const container = ref(null);
+const sanitizedData = computed(() =>
+  data.value.map(item => ({
+    ...item,
+    safeText: sanitizeHtml(item.text || '')
+  }))
+);
 
 const getData = async () => {
   try {
@@ -90,12 +97,12 @@ onMounted(async () => {
           class="inline-block p:4|8 r:4 fg:white bg:primary b:1|solid|primary transition:400ms {fg:primary;bg:transparent;}:hover">搜尋</a>
       </div>
       <template v-if="data.length > 0">
-        <div v-for="(item, index) in data" :key="`text${index}`">
+        <div v-for="(item, index) in sanitizedData" :key="`text${index}`">
           <div class="flex jc:end mb:32">
             <a @click="editFeatured(item)"
               class="inline-block p:4|8 r:4 fg:white bg:primary b:1|solid|primary transition:400ms {fg:primary;bg:transparent;}:hover">編輯</a>
           </div>
-          <div ref="container" class="bg:secondary p:32" v-html="item.text"></div>
+          <div ref="container" class="bg:secondary p:32" v-html="item.safeText"></div>
         </div>
       </template>
     </div>

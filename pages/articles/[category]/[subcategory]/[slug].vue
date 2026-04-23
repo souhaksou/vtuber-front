@@ -1,4 +1,6 @@
 <script setup>
+import { sanitizeHtml } from '@/utils/sanitizeHtml';
+
 const route = useRoute();
 const { category, subcategory, slug } = route.params;
 const { toLocal } = useTime();
@@ -39,6 +41,8 @@ if (res.status.value === 'success') {
   setSeo(data.value);
 }
 
+const sanitizedText = computed(() => sanitizeHtml(data.value?.text || ''));
+
 const changeCss = (textContainer) => {
   textContainer.classList.add(`lh:2.0`);
   textContainer.classList.add(`{my:16;}>h2`);
@@ -70,7 +74,7 @@ onMounted(() => {
             </blockquote>
           </div>
           <p class="mb:16">{{ data.description }}</p>
-          <div ref="container" v-html="data.text"></div>
+          <div ref="container" v-html="sanitizedText"></div>
         </div>
       </template>
       <template v-else>
