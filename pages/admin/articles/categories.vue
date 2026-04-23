@@ -51,9 +51,7 @@ const addCategory = async () => {
       if (res.data.success === true) {
         const message = res.data.message;
         await openModal(okMsg, { msg: message });
-        setTimeout(() => {
-          window.location.reload(true);
-        }, 1000);
+        await getData();
       }
     } catch (error) {
       console.error(error);
@@ -82,9 +80,7 @@ const editCategory = async (index) => {
       if (res.data.success === true) {
         const message = res.data.message;
         await openModal(okMsg, { msg: message });
-        setTimeout(() => {
-          window.location.reload(true);
-        }, 1000);
+        await getData();
       }
     } catch (error) {
       console.error(error);
@@ -113,9 +109,7 @@ const deleteCategory = async (item) => {
       if (res.data.success === true) {
         const message = res.data.message;
         await openModal(okMsg, { msg: message });
-        setTimeout(() => {
-          window.location.reload(true);
-        }, 1000);
+        await getData();
       }
     } catch (error) {
       console.error(error);
@@ -144,9 +138,7 @@ const addSubcategory = async (item) => {
       if (res.data.success === true) {
         const message = res.data.message;
         await openModal(okMsg, { msg: message });
-        setTimeout(() => {
-          window.location.reload(true);
-        }, 1000);
+        await getData();
       }
     } catch (error) {
       console.error(error);
@@ -175,9 +167,7 @@ const editSubcategory = async (item, ii) => {
       if (res.data.success === true) {
         const message = res.data.message;
         await openModal(okMsg, { msg: message });
-        setTimeout(() => {
-          window.location.reload(true);
-        }, 1000);
+        await getData();
       }
     } catch (error) {
       console.error(error);
@@ -206,9 +196,7 @@ const deleteSubcategory = async (item) => {
       if (res.data.success === true) {
         const message = res.data.message;
         await openModal(okMsg, { msg: message });
-        setTimeout(() => {
-          window.location.reload(true);
-        }, 1000);
+        await getData();
       }
     } catch (error) {
       console.error(error);

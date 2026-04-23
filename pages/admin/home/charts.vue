@@ -48,9 +48,7 @@ const toggleHighlight = async (item) => {
       if (res.data.success === true) {
         const message = res.data.message;
         await openModal(okMsg, { msg: message });
-        setTimeout(() => {
-          window.location.reload(true);
-        }, 1000);
+        await getData();
       }
     } catch (error) {
       console.error(error);

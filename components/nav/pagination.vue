@@ -11,11 +11,11 @@ const props = defineProps({
   },
   length: {
     type: Number,
-    defalut: () => 0
+    defaulut: () => 0
   },
   show: {
     type: Number,
-    defalut: () => 0
+    default: () => 0
   }
 });
 
