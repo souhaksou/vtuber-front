@@ -17,6 +17,7 @@ const data = ref({
     password: ''
 });
 const showPassword = ref(false);
+const isSubmitting = ref(false);
 
 const captchaInput = ref('');
 const captchaCheck = ref(null);
@@ -28,6 +29,7 @@ const { $axios } = useNuxtApp();
 const runtimeConfig = useRuntimeConfig();
 
 const submit = async () => {
+    if (isSubmitting.value) return;
     if (data.value.account.length === 0) {
         await openModal(textMsg, { msg: '請輸入帳號' });
         return;
@@ -44,11 +46,13 @@ const submit = async () => {
         await openModal(textMsg, { msg: '驗證碼錯誤' });
         return;
     }
+    isSubmitting.value = true;
     try {
         const res = await $axios({
             method: 'post',
             url: `${runtimeConfig.public.API_BASE_URL}/admin/login`,
-            data: data.value
+            data: data.value,
+            timeout: 10000
         });
         if (res.data.success === true) {
             const { token, expirationDate } = res.data;
@@ -59,6 +63,8 @@ const submit = async () => {
         console.error(error);
         const parsedError = parseApiError(error);
         await openModal(errorMsg, { msg: parsedError.message });
+    } finally {
+        isSubmitting.value = false;
     }
 };
 
@@ -90,8 +96,8 @@ const submit = async () => {
                     </VueClientRecaptcha>
                 </div>
             </div>
-            <a @click="submit"
-                class="block w:full t:center p:8|16 r:4 f:20 fg:white bg:primary b:1|solid|primary transition:400ms {fg:primary;bg:transparent;}:hover">送出</a>
+            <a @click="submit" :class="isSubmitting ? 'opacity:.5 cursor:not-allowed' : ''"
+                class="block w:full t:center p:8|16 r:4 f:20 fg:white bg:primary b:1|solid|primary transition:400ms {fg:primary;bg:transparent;}:hover">{{ isSubmitting ? '送出中...' : '送出' }}</a>
         </div>
     </section>
 </template>

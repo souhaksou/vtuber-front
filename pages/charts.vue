@@ -4,22 +4,26 @@ const runtimeConfig = useRuntimeConfig();
 const data = ref([]);
 const pageError = ref('');
 const url = `${runtimeConfig.public.API_BASE_URL}/api/chart`;
-const res = await useFetch(url, { method: 'GET' });
-
-if (res.status.value === 'success') {
-  data.value = res.data.value.data;
-} else if (res.status.value === 'error') {
-  pageError.value = '圖表資料讀取失敗，請稍後再試。';
-}
+const { data: resData, status: resStatus, pending: loading } = useFetch(url, { method: 'GET', timeout: 10000 });
+watch(resStatus, (status) => {
+  if (status === 'success') {
+    data.value = resData.value.data;
+  } else if (status === 'error') {
+    pageError.value = '圖表資料讀取失敗，請稍後再試。';
+  }
+}, { immediate: true });
 
 const h1 = ref('');
-const seo = ref(null);
 const seoUrl = `${runtimeConfig.public.API_BASE_URL}/api/seo`;
+
+useHead({ title: '圖表 | VTuber 台灣' });
+
 const seoRes = await useFetch(seoUrl, {
   method: 'POST',
   body: JSON.stringify({
     page: 'charts'
-  })
+  }),
+  timeout: 10000
 });
 
 const setSeo = (obj) => {
@@ -44,8 +48,7 @@ const setSeo = (obj) => {
 };
 
 if (seoRes.status.value === 'success') {
-  seo.value = seoRes.data.value.data;
-  setSeo(seo.value);
+  setSeo(seoRes.data.value.data);
 }
 
 </script>
@@ -55,6 +58,7 @@ if (seoRes.status.value === 'success') {
     <div class="max-w:screen-lg mx:auto">
       <h1 class="fg:primary f:36 f:bold t:center mb:32">{{ h1 }}</h1>
       <p v-if="pageError" class="t:center f:20 fg:red">{{ pageError }}</p>
+      <p v-else-if="loading" class="t:center f:20">載入中...</p>
       <div v-else class="grid-cols:1 gap:32 gap:64@xs">
         <div v-for="(item, index) in data" :key="`chart${index}`">
           <iframe :src="item.chartUrl" allowfullscreen :class="`aspect:${item.width}/${item.height}`"

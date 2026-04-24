@@ -5,11 +5,11 @@ import { safeJsonParse } from '@/utils/safeJsonParse';
 const { toLocal, live3 } = useTime();
 const { deepCopy } = useCopy();
 const { popular } = useCheck();
+const { livestreamsAll, trendingTop10, vtubersTop10 } = useGithubApi();
 const pageError = ref('');
 
-const livestreamsUrl = 'https://raw.githubusercontent.com/TaiwanVtuberData/TaiwanVTuberTrackingDataJson/master/api/v2/TW/livestreams/all.json';
 const livestreams = ref([]);
-const livestreamsResult = await useFetch(livestreamsUrl, { method: 'GET' });
+const livestreamsResult = await useFetch(livestreamsAll, { method: 'GET', timeout: 10000 });
 if (livestreamsResult.status.value === 'success') {
   const parsed = safeJsonParse(livestreamsResult.data.value, {});
   const arr = deepCopy(Array.isArray(parsed?.livestreams) ? parsed.livestreams : []);
@@ -18,9 +18,8 @@ if (livestreamsResult.status.value === 'success') {
   pageError.value = '首頁資料讀取失敗，請稍後再試。';
 }
 
-const hotUrl = 'https://raw.githubusercontent.com/TaiwanVtuberData/TaiwanVTuberTrackingDataJson/master/api/v2/TW/trending-vtubers/livestream/10.json';
 const hot = ref([]);
-const hotResult = await useFetch(hotUrl, { method: 'GET' });
+const hotResult = await useFetch(trendingTop10, { method: 'GET', timeout: 10000 });
 if (hotResult.status.value === 'success') {
   const parsed = safeJsonParse(hotResult.data.value, {});
   const arr = deepCopy(Array.isArray(parsed?.VTubers) ? parsed.VTubers : []);
@@ -29,9 +28,8 @@ if (hotResult.status.value === 'success') {
   pageError.value = '首頁資料讀取失敗，請稍後再試。';
 }
 
-const followUrl = 'https://raw.githubusercontent.com/TaiwanVtuberData/TaiwanVTuberTrackingDataJson/master/api/v2/TW/vtubers/10.json';
 const follow = ref([]);
-const followResult = await useFetch(followUrl, { method: 'GET' });
+const followResult = await useFetch(vtubersTop10, { method: 'GET', timeout: 10000 });
 if (followResult.status.value === 'success') {
   const parsed = safeJsonParse(followResult.data.value, {});
   const arr = deepCopy(Array.isArray(parsed?.VTubers) ? parsed.VTubers : []);
@@ -47,7 +45,7 @@ const article = ref([]);
 const chart = ref([]);
 
 const url = `${runtimeConfig.public.API_BASE_URL}/api/home`;
-const res = await useFetch(url, { method: 'GET' });
+const res = await useFetch(url, { method: 'GET', timeout: 10000 });
 
 if (res.status.value === 'success') {
   article.value = res.data.value.data.article;
@@ -76,13 +74,16 @@ const breakpoints = ref({
 });
 
 const h1 = ref('');
-const seo = ref(null);
 const seoUrl = `${runtimeConfig.public.API_BASE_URL}/api/seo`;
+
+useHead({ title: 'VTuber 台灣' });
+
 const seoRes = await useFetch(seoUrl, {
   method: 'POST',
   body: JSON.stringify({
     page: 'index'
-  })
+  }),
+  timeout: 10000
 });
 
 const setSeo = (obj) => {
@@ -107,8 +108,7 @@ const setSeo = (obj) => {
 };
 
 if (seoRes.status.value === 'success') {
-  seo.value = seoRes.data.value.data;
-  setSeo(seo.value);
+  setSeo(seoRes.data.value.data);
 }
 
 </script>

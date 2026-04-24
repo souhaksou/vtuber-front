@@ -6,9 +6,9 @@ import { safeJsonParse } from '@/utils/safeJsonParse';
 
 const { deepCopy } = useCopy();
 const { popular } = useCheck();
+const { trendingTop100 } = useGithubApi();
 const pageError = ref('');
 
-const hotUrl = 'https://raw.githubusercontent.com/TaiwanVtuberData/TaiwanVTuberTrackingDataJson/master/api/v2/TW/trending-vtubers/livestream/100.json';
 const hot = ref([]);
 const search = ref('');
 const data = computed(() => {
@@ -32,31 +32,36 @@ const paginationShow = (num) => {
   }
 };
 
-const hotResult = await useFetch(hotUrl, { method: 'GET' });
-if (hotResult.status.value === 'success') {
-  const parsed = safeJsonParse(hotResult.data.value, {});
-  hot.value = deepCopy(Array.isArray(parsed?.VTubers) ? parsed.VTubers : []);
-} else if (hotResult.status.value === 'error') {
-  pageError.value = '熱門排行資料讀取失敗，請稍後再試。';
-}
+// L2: timeout；L6: pending 做 loading 狀態
+const { data: hotRaw, status: hotStatus, pending: loading } = useFetch(trendingTop100, { method: 'GET', timeout: 10000 });
+
+watch(hotStatus, (status) => {
+  if (status === 'success') {
+    const parsed = safeJsonParse(hotRaw.value, {});
+    hot.value = deepCopy(Array.isArray(parsed?.VTubers) ? parsed.VTubers : []);
+  } else if (status === 'error') {
+    pageError.value = '熱門排行資料讀取失敗，請稍後再試。';
+  }
+}, { immediate: true });
 
 const h1 = ref('');
-const seo = ref(null);
 const seoUrl = `${runtimeConfig.public.API_BASE_URL}/api/seo`;
+
+// L3: SEO fallback，成功後由 setSeo 覆蓋
+useHead({ title: '熱門排行 | VTuber 台灣' });
+
 const seoRes = await useFetch(seoUrl, {
   method: 'POST',
   body: JSON.stringify({
     page: 'hot'
-  })
+  }),
+  timeout: 10000
 });
 
 const setSeo = (obj) => {
   h1.value = obj.h1;
   useHead({
     title: obj.title,
-    // link: [
-    //   { rel: 'canonical', href: window.location.href }
-    // ],
     meta: [
       { name: 'description', content: obj.description },
       { property: 'og:title', content: obj.title },
@@ -64,7 +69,6 @@ const setSeo = (obj) => {
       { property: 'og:description', content: obj.description },
       { property: 'og:image', content: obj.imgUrl },
       { property: 'og:type', content: obj.type },
-      // { property: 'og:url', content: window.location.href },
       { property: 'og:site_name', content: 'vtuber' },
       { name: 'author', content: obj.author }
     ],
@@ -72,8 +76,7 @@ const setSeo = (obj) => {
 };
 
 if (seoRes.status.value === 'success') {
-  seo.value = seoRes.data.value.data;
-  setSeo(seo.value);
+  setSeo(seoRes.data.value.data);
 }
 
 </script>
@@ -84,6 +87,9 @@ if (seoRes.status.value === 'success') {
       <h1 class="fg:primary f:36 f:bold t:center mb:32">{{ h1 }}</h1>
       <template v-if="pageError">
         <p class="t:center f:20 fg:red">{{ pageError }}</p>
+      </template>
+      <template v-else-if="loading">
+        <p class="t:center f:20">載入中...</p>
       </template>
       <template v-else-if="hot.length > 0">
         <div class="flex jc:end mb:32">

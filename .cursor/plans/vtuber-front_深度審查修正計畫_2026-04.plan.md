@@ -43,25 +43,25 @@ todos:
     status: completed
   - id: l1-hardcoded-github-api-url
     content: L1｜GitHub API URL 硬寫在多個頁面
-    status: pending
+    status: completed
   - id: l2-external-api-no-timeout
     content: L2｜外部 API 呼叫無 timeout 設定
-    status: pending
+    status: completed
   - id: l3-seo-fetch-fallback-meta
     content: L3｜SEO fetch 失敗時 meta tag 完全缺失
-    status: pending
+    status: completed
   - id: l4-livecurrent-invalid-index
     content: L4｜`liveCurrent()` 回傳 undefined/-1 時分頁計算錯誤
-    status: pending
+    status: completed
   - id: l5-usecheck-empty-string
     content: L5｜`useCheck.js` 回傳空字串導致「0 vs 無資料」混淆
-    status: pending
+    status: completed
   - id: l6-missing-loading-state
     content: L6｜所有資料頁面缺少 Loading 狀態
-    status: pending
+    status: completed
   - id: l7-missing-security-headers
     content: L7｜nuxt.config.ts 缺少安全 Header 設定
-    status: pending
+    status: completed
   - id: l8-public-runtimeconfig-api-base-url
     content: L8｜`API_BASE_URL` 暴露在 client-side runtimeConfig
     status: pending
@@ -199,8 +199,8 @@ isProject: false
 | Critical | 3 | 3 | 0 |
 | High | 4 | 4 | 0 |
 | Medium | 6 | 5 | 1 |
-| Low | 8 | 0 | 8 |
-| **合計** | **21** | **12** | **9** |
+| Low | 8 | 7 | 1 |
+| **合計** | **21** | **19** | **2** |
 
 ---
 

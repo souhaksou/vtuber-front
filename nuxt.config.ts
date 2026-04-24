@@ -3,6 +3,13 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   //  ssr: false,
   routeRules: {
+    "/**": {
+      headers: {
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'SAMEORIGIN',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+      }
+    },
     "/login/**": { ssr: false },
     "/admin/**": { ssr: false }, // 僅在客戶端渲染
   },

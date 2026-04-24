@@ -16,7 +16,7 @@ export default function () {
           return item.YouTube.subscriber.count;
         }
         else {
-          return '';
+          return null;
         }
       }
       else if (option === 'Twitch') {
@@ -24,15 +24,15 @@ export default function () {
           return item.Twitch.follower.count;
         }
         else {
-          return '';
+          return null;
         }
       }
       else {
-        return '';
+        return null;
       }
     }
     else {
-      return '';
+      return null;
     }
   };
   return {

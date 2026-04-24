@@ -7,13 +7,14 @@ const data = ref([]);
 const container = ref(null);
 const pageError = ref('');
 const url = `${runtimeConfig.public.API_BASE_URL}/api/featured`;
-const res = await useFetch(url, { method: 'GET' });
-
-if (res.status.value === 'success') {
-  data.value = res.data.value.data;
-} else if (res.status.value === 'error') {
-  pageError.value = '精選文章資料讀取失敗，請稍後再試。';
-}
+const { data: resData, status: resStatus, pending: loading } = useFetch(url, { method: 'GET', timeout: 10000 });
+watch(resStatus, (status) => {
+  if (status === 'success') {
+    data.value = resData.value.data;
+  } else if (status === 'error') {
+    pageError.value = '精選文章資料讀取失敗，請稍後再試。';
+  }
+}, { immediate: true });
 
 const sanitizedData = computed(() =>
   data.value.map(item => ({
@@ -39,13 +40,16 @@ watch(data, async (val) => {
 });
 
 const h1 = ref('');
-const seo = ref(null);
 const seoUrl = `${runtimeConfig.public.API_BASE_URL}/api/seo`;
+
+useHead({ title: '精選文章 | VTuber 台灣' });
+
 const seoRes = await useFetch(seoUrl, {
   method: 'POST',
   body: JSON.stringify({
     page: 'featured'
-  })
+  }),
+  timeout: 10000
 });
 
 const setSeo = (obj) => {
@@ -70,8 +74,7 @@ const setSeo = (obj) => {
 };
 
 if (seoRes.status.value === 'success') {
-  seo.value = seoRes.data.value.data;
-  setSeo(seo.value);
+  setSeo(seoRes.data.value.data);
 }
 
 </script>
@@ -82,6 +85,9 @@ if (seoRes.status.value === 'success') {
       <!-- 資料 -->
       <template v-if="pageError">
         <p class="t:center f:20 fg:red">{{ pageError }}</p>
+      </template>
+      <template v-else-if="loading">
+        <p class="t:center f:20">載入中...</p>
       </template>
       <template v-else-if="data.length > 0">
         <div v-for="(item, index) in sanitizedData" :key="`text${index}`">

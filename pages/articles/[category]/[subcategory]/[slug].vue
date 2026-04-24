@@ -28,30 +28,35 @@ const setSeo = (obj) => {
 
 const data = ref(null);
 const container = ref(null);
+const pageError = ref('');
 
 const url = `${runtimeConfig.public.API_BASE_URL}/api/article`;
-const res = await useFetch(url, {
+const { data: resData, status: resStatus, pending: loading } = await useFetch(url, {
   method: 'post',
-  body: {
-    slug: slug
-  }
+  body: { slug },
+  timeout: 10000
 });
-if (res.status.value === 'success') {
-  data.value = res.data.value.data;
+if (resStatus.value === 'success') {
+  data.value = resData.value.data;
   setSeo(data.value);
+} else if (resStatus.value === 'error') {
+  pageError.value = '\u6587\u7ae0\u8b80\u53d6\u5931\u6557\uff0c\u8acb\u7a0d\u5f8c\u518d\u8a66\u3002';
 }
 
 const sanitizedText = computed(() => sanitizeHtml(data.value?.text || ''));
 
 const changeCss = (textContainer) => {
+  if (!textContainer) return;
   textContainer.classList.add(`lh:2.0`);
   textContainer.classList.add(`{my:16;}>h2`);
   textContainer.classList.add(`{content:'\u2022';fg:#333;mr:4;}>ul>li::before`);
   textContainer.classList.add(`{fg:#333;ml:16;pl:6;}>ol>li`);
 };
 
-onMounted(() => {
-  changeCss(container.value);
+watch(data, async (val) => {
+  if (!val) return;
+  await nextTick();
+  if (container.value) changeCss(container.value);
 });
 
 </script>
@@ -59,7 +64,13 @@ onMounted(() => {
 <template>
   <section class="p:32">
     <div class="max-w:screen-xs mx:auto">
-      <template v-if="data">
+      <template v-if="pageError">
+        <p class="t:center f:20 fg:red">{{ pageError }}</p>
+      </template>
+      <template v-else-if="loading">
+        <p class="t:center f:20">載入中...</p>
+      </template>
+      <template v-else-if="data">
         <h1 class="fg:primary f:36 f:bold t:center mb:32">{{ data.title }}</h1>
         <div class="bg:secondary lh:2.0 p:16 p:32|48@xs">
           <p class="mb:16"> {{

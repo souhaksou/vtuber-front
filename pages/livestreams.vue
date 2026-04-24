@@ -6,9 +6,9 @@ import { safeJsonParse } from '@/utils/safeJsonParse';
 
 const { toLocal, liveCurrent } = useTime();
 const { deepCopy } = useCopy();
+const { livestreamsAll } = useGithubApi();
 const pageError = ref('');
 
-const livestreamsUrl = 'https://raw.githubusercontent.com/TaiwanVtuberData/TaiwanVTuberTrackingDataJson/master/api/v2/TW/livestreams/all.json';
 const livestreams = ref([]);
 const search = ref('');
 const data = computed(() => {
@@ -32,37 +32,44 @@ const paginationShow = (num) => {
   }
 };
 
-const livestreamsResult = await useFetch(livestreamsUrl, { method: 'GET' });
-if (livestreamsResult.status.value === 'success') {
-  const parsed = safeJsonParse(livestreamsResult.data.value, {});
-  livestreams.value = deepCopy(Array.isArray(parsed?.livestreams) ? parsed.livestreams : []);
-  setTimeout(() => {
+// L2: timeout；L6: pending 做 loading 狀態
+const { data: livestreamsRaw, status: livestreamsStatus, pending: loading } = useFetch(livestreamsAll, { method: 'GET', timeout: 10000 });
+
+// L4: liveCurrent 現在回傳 null（無資料）或非負整數
+watch(livestreamsStatus, (status) => {
+  if (status === 'success') {
+    const parsed = safeJsonParse(livestreamsRaw.value, {});
+    livestreams.value = deepCopy(Array.isArray(parsed?.livestreams) ? parsed.livestreams : []);
     if (livestreams.value.length > 0) {
-      const index = liveCurrent(livestreams.value) + 1;
-      current.value = Math.floor(index / show) + (index % show > 0 ? 1 : 0);
+      const idx = liveCurrent(livestreams.value);
+      if (idx != null) {
+        const index = idx + 1;
+        current.value = Math.max(1, Math.floor(index / show) + (index % show > 0 ? 1 : 0));
+      }
     }
-  }, 100);
-} else if (livestreamsResult.status.value === 'error') {
-  pageError.value = '直播資料讀取失敗，請稍後再試。';
-}
+  } else if (status === 'error') {
+    pageError.value = '直播資料讀取失敗，請稍後再試。';
+  }
+}, { immediate: true });
 
 const h1 = ref('');
-const seo = ref(null);
 const seoUrl = `${runtimeConfig.public.API_BASE_URL}/api/seo`;
+
+// L3: SEO fallback，成功後由 setSeo 覆蓋
+useHead({ title: '直播 | VTuber 台灣' });
+
 const seoRes = await useFetch(seoUrl, {
   method: 'POST',
   body: JSON.stringify({
     page: 'livestreams'
-  })
+  }),
+  timeout: 10000
 });
 
 const setSeo = (obj) => {
   h1.value = obj.h1;
   useHead({
     title: obj.title,
-    // link: [
-    //   { rel: 'canonical', href: window.location.href }
-    // ],
     meta: [
       { name: 'description', content: obj.description },
       { property: 'og:title', content: obj.title },
@@ -70,7 +77,6 @@ const setSeo = (obj) => {
       { property: 'og:description', content: obj.description },
       { property: 'og:image', content: obj.imgUrl },
       { property: 'og:type', content: obj.type },
-      // { property: 'og:url', content: window.location.href },
       { property: 'og:site_name', content: 'vtuber' },
       { name: 'author', content: obj.author }
     ],
@@ -78,8 +84,7 @@ const setSeo = (obj) => {
 };
 
 if (seoRes.status.value === 'success') {
-  seo.value = seoRes.data.value.data;
-  setSeo(seo.value);
+  setSeo(seoRes.data.value.data);
 }
 
 </script>
@@ -90,6 +95,9 @@ if (seoRes.status.value === 'success') {
       <h1 class="fg:primary f:36 f:bold t:center mb:32">{{ h1 }}</h1>
       <template v-if="pageError">
         <p class="t:center f:20 fg:red">{{ pageError }}</p>
+      </template>
+      <template v-else-if="loading">
+        <p class="t:center f:20">載入中...</p>
       </template>
       <template v-else-if="livestreams.length > 0">
         <div class="flex jc:end mb:32">
