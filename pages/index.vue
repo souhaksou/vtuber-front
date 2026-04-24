@@ -2,9 +2,12 @@
 import 'vue3-carousel/dist/carousel.css';
 import { Carousel, Slide } from 'vue3-carousel';
 import { safeJsonParse } from '@/utils/safeJsonParse';
-const { toLocal, live3 } = useTime();
-const { deepCopy } = useCopy();
-const { popular } = useCheck();
+import time from '@/utils/time';
+import copy from '@/utils/copy';
+import check from '@/utils/check';
+const { toLocal, live3 } = time();
+const { deepCopy } = copy();
+const { popular } = check();
 const { livestreamsAll, trendingTop10, vtubersTop10 } = useGithubApi();
 const pageError = ref('');
 

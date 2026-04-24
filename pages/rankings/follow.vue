@@ -3,9 +3,11 @@ const runtimeConfig = useRuntimeConfig();
 
 import pagination from '@/components/nav/pagination.vue';
 import { safeJsonParse } from '@/utils/safeJsonParse';
+import copy from '@/utils/copy';
+import check from '@/utils/check';
 
-const { deepCopy } = useCopy();
-const { popular, checkFollow } = useCheck();
+const { deepCopy } = copy();
+const { popular, checkFollow } = check();
 const { vtubersAll } = useGithubApi();
 const pageError = ref('');
 

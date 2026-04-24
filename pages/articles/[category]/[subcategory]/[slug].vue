@@ -1,9 +1,10 @@
 <script setup>
 import { sanitizeHtml } from '@/utils/sanitizeHtml';
+import time from '@/utils/time';
 
 const route = useRoute();
 const { slug } = route.params;
-const { toLocal } = useTime();
+const { toLocal } = time();
 const runtimeConfig = useRuntimeConfig();
 
 const setSeo = (obj) => {

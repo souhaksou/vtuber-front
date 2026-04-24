@@ -3,9 +3,11 @@ const runtimeConfig = useRuntimeConfig();
 
 import pagination from '@/components/nav/pagination.vue';
 import { safeJsonParse } from '@/utils/safeJsonParse';
+import copy from '@/utils/copy';
+import check from '@/utils/check';
 
-const { deepCopy } = useCopy();
-const { popular } = useCheck();
+const { deepCopy } = copy();
+const { popular } = check();
 const { trendingTop100 } = useGithubApi();
 const pageError = ref('');
 

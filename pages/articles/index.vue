@@ -1,6 +1,7 @@
 <script setup>
 const runtimeConfig = useRuntimeConfig();
-const { toLocal } = useTime();
+import time from '@/utils/time';
+const { toLocal } = time();
 // const searchOption = ref('');
 
 const article = ref([]);

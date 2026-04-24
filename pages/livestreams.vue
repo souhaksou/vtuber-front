@@ -3,9 +3,11 @@ const runtimeConfig = useRuntimeConfig();
 
 import pagination from '@/components/nav/pagination.vue';
 import { safeJsonParse } from '@/utils/safeJsonParse';
+import time from '@/utils/time';
+import copy from '@/utils/copy';
 
-const { toLocal, liveCurrent } = useTime();
-const { deepCopy } = useCopy();
+const { toLocal, liveCurrent } = time();
+const { deepCopy } = copy();
 const { livestreamsAll } = useGithubApi();
 const pageError = ref('');
 
